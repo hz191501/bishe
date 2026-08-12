@@ -1,0 +1,25 @@
+
+
+{# 修改帖子页面：加载现有帖子数据并复用帖子公共表单。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Modifica richiesta
+{% endblock %}
+{% block body %}
+    <div class="request-create-page">
+        <header class="page-heading illustrated-banner illustrated-banner--request site-illustrated-hero">
+            <span class="eyebrow text-primary">LA TUA RICHIESTA</span>
+            <h1>Modifica la richiesta</h1>
+            <p>Aggiorna le informazioni necessarie e salva le modifiche.</p>
+        </header>
+        <section class="request-form-panel mx-auto editor-card-narrow">
+            <div class="panel-heading">
+                <span class="panel-number">01</span>
+                <div>
+                    <h2>Dettagli della richiesta</h2>
+                    <p>Controlla che le informazioni siano ancora corrette.</p>
+                </div>
+            </div>
+            {{ include('bridge_task/_form.html.twig', {button_label:'Salva modifiche'}) }}
+        </section>
+    </div>
+{% endblock %}

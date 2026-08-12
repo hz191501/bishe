@@ -1,0 +1,96 @@
+
+/* 全站基础样式：颜色变量、字体、页面背景和浏览器默认样式调整。 */
+
+:root {
+    /* 修改这里可以统一调整全站主色、背景色、文字色和边框色。 */
+    --navy: #102f4f;          
+    --blue: #1f5f8b;          
+    --blue-light: #2879a8;    
+    --cream: #ebe8e2;         
+    --paper: #f0f0ea;         
+    --surface: #eef4f1;       
+    --surface-blue: #edf4f7;  
+    --surface-coral: #b43900; 
+    --border: #d9e3e2;        
+    --ink: #163047;           
+    --muted: #667b8c;         
+    --coral: #e56f51;         
+    --jade: #4c8272;          
+    --line: #d9e3e2;          
+}
+
+
+* {
+    /* 让所有元素的宽高计算都包含 padding 和 border，排版更容易控制。 */
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    /* 设置全站默认字体、文字颜色和背景；具体页面可以再覆盖。 */
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;        
+    display: flex;            
+    flex-direction: column;
+    margin: 0;                
+    background:
+        /* 三处可见但低饱和度的光晕，让背景不再像单一纯色。 */
+        radial-gradient(circle at 5% 12%, rgba(76, 130, 114, .15), transparent 29rem),
+        radial-gradient(circle at 96% 32%, rgba(229, 111, 81, .12), transparent 31rem),
+        radial-gradient(circle at 48% 91%, rgba(59, 130, 168, .11), transparent 34rem),
+        /* 极淡的斜向细纹理，避免大面积纯色显得生硬。 */
+        repeating-linear-gradient(
+            135deg,
+            rgba(255, 255, 255, .022) 0,
+            rgba(255, 255, 255, .022) 1px,
+            transparent 1px,
+            transparent 14px
+        ),
+        /* 暖灰色从上到下有轻微明暗变化。 */
+        linear-gradient(180deg, #d8d5ce 0%, #c9c6bf 48%, #d4d1ca 100%);          
+    background-attachment: fixed;
+    color: var(--ink);        
+    font-family: "DM Sans", sans-serif; 
+    line-height: 1.6;         
+}
+
+@media (max-width: 767px) {
+    body {
+        /* 手机端不固定背景，滚动更顺畅。 */
+        background-attachment: scroll;
+    }
+}
+
+
+h1,
+h2,
+h3,
+p {
+    overflow-wrap: break-word;
+}
+
+
+.eyebrow {
+    /* 页面标题上方的小型大写提示文字。 */
+    font-size: .74rem;        
+    letter-spacing: .14em;   
+    font-weight: 700;         
+}
+
+
+form label {
+    /* 所有表单标签的统一粗细和颜色。 */
+    font-weight: 600;
+    margin-top: .5rem;        
+}
+
+
+form input,
+form textarea,
+form select {
+    margin-bottom: .75rem;
+}

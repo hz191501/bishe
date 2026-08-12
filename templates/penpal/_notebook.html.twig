@@ -1,0 +1,74 @@
+
+
+{# 共享笔记区：好友双方可以新增笔记，作者或管理员可以删除。 #}
+{% set note_type_labels = {
+    word: 'Nuova parola',
+    correction: 'Correzione linguistica',
+    culture: 'Scoperta culturale',
+    place: 'Luogo da visitare',
+    food: 'Cibo e tradizioni',
+    advice: 'Consiglio pratico'
+} %}
+<section class="bridge-notebook" id="quaderno-del-ponte">
+    <header class="notebook-heading">
+        <div>
+            <span class="eyebrow text-primary">MEMORIA CONDIVISA</span>
+            <h2>Il quaderno del ponte</h2>
+            <p>Raccogliete parole, luoghi, abitudini e piccole scoperte nate dalle vostre lettere.</p>
+        </div>
+        <span class="notebook-count">
+            {{ connection.sharedNotes|length }}
+            {{ connection.sharedNotes|length == 1 ? 'nota' : 'note' }}
+        </span>
+    </header>
+
+    <div class="notebook-layout">
+        <form class="notebook-form-card" method="post" action="{{ path('app_shared_note_add', {id: connection.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('shared_note_' ~ connection.id) }}">
+            <span class="eyebrow">AGGIUNGI UN RICORDO</span>
+
+            <label for="note-type">Tipo di nota</label>
+            <select id="note-type" name="type" required>
+                {% for value, label in note_type_labels %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="note-title">Titolo</label>
+            <input id="note-title" name="title" type="text" maxlength="120" placeholder="Per esempio: Fare bella figura" required>
+
+            <label for="note-content">Che cosa volete ricordare?</label>
+            <textarea id="note-content" name="content" rows="5" maxlength="2000" placeholder="Scrivi una spiegazione breve e utile..." required></textarea>
+
+            <button class="btn btn-primary" type="submit">Aggiungi al quaderno</button>
+        </form>
+
+        <div class="notebook-grid">
+            {% for note in connection.sharedNotes %}
+                <article class="notebook-card">
+                    <header>
+                        <span>{{ note_type_labels[note.type] ?? 'Nota culturale' }}</span>
+                        <time datetime="{{ note.createdAt|date('c') }}">{{ note.createdAt|date('d/m/Y') }}</time>
+                    </header>
+                    <h3>{{ note.title }}</h3>
+                    <p>{{ note.content|nl2br }}</p>
+                    <footer>
+                        <span>Aggiunta da <strong>{{ note.author.username }}</strong></span>
+                        {% if note.author == app.user or is_granted('ROLE_ADMIN') %}
+                            <form method="post" action="{{ path('app_shared_note_delete', {id: note.id}) }}" onsubmit="return confirm('Eliminare questa nota?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_shared_note_' ~ note.id) }}">
+                                <button type="submit">Elimina</button>
+                            </form>
+                        {% endif %}
+                    </footer>
+                </article>
+            {% else %}
+                <div class="notebook-empty">
+                    <span aria-hidden="true">✦</span>
+                    <h3>Il primo appunto può essere il vostro</h3>
+                    <p>Salvate una parola o una scoperta culturale che non volete dimenticare.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

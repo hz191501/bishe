@@ -1,0 +1,283 @@
+
+
+{# 好友信件页面：显示历史信件、发送表单、共同笔记和关系信息。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Lettere con {{ friend.username }} | BuddyBridge
+{% endblock %}
+
+{% block body %}
+
+    <div class="letter-page">
+        
+        <header class="letter-page-heading">
+            <div>
+                <span class="eyebrow text-primary">CORRISPONDENZA PRIVATA</span>
+                <h1>Lettere tra amici.</h1>
+                <p>Prenditi il tempo per raccontare, ascoltare e costruire un legame autentico.</p>
+            </div>
+            {# 返回好友页时保留好友列表、收到申请和发出申请各自的页码。 #}
+            <a class="btn btn-outline-secondary" href="{{ path('app_penpal_index', {
+                page: app.request.query.get('return_page') ?: 1,
+                friend_q: app.request.query.get('return_friend_q'),
+                received_page: app.request.query.get('return_received_page') ?: 1,
+                sent_page: app.request.query.get('return_sent_page') ?: 1
+            }) }}">
+                <span aria-hidden="true">←</span>
+                Tutti gli amici
+            </a>
+        </header>
+
+        <div class="letter-workspace">
+            
+            <aside
+                id="relationship-panel"
+                class="relationship-panel"
+                data-mobile-relationship-panel
+                aria-label="Profilo e percorso dell’amicizia"
+            >
+                <button
+                    class="mobile-relationship-close"
+                    type="button"
+                    data-mobile-relationship-close
+                    aria-label="Chiudi il profilo dell’amicizia"
+                >
+                    <span aria-hidden="true">←</span>
+                    Torna alle lettere
+                </button>
+                <div class="relationship-person">
+                    <a class="profile-avatar" href="{{ path('app_profile_show', {id: friend.id}) }}">
+                        {{ friend.username|slice(0, 1)|upper }}
+                    </a>
+                    <span class="relationship-person-copy">
+                        <small>IL TUO AMICO DI PENNA</small>
+                        <span class="friend-name-line">
+                            <a href="{{ path('app_profile_show', {id: friend.id}) }}">{{ friend.username }}</a>
+                            <details class="friend-level-popover">
+                                <summary class="friend-level-badge">
+                                    Lv. {{ archive.growth.level }} · {{ archive.growth.title }}
+                                </summary>
+                                <div class="growth-popover-panel">
+                                    <header>
+                                        <span>LIVELLO DI AMICIZIA</span>
+                                        <strong>LV. {{ archive.growth.level }}</strong>
+                                    </header>
+                                    <h3>{{ archive.growth.title }}</h3>
+                                    <p><b>{{ archive.growth.total_xp }} XP</b> costruiti insieme</p>
+
+                                    <div class="growth-track" aria-label="Progresso {{ archive.growth.percentage }}%">
+                                        <span style="width: {{ archive.growth.percentage }}%"></span>
+                                    </div>
+                                    <div class="growth-level-caption">
+                                        <span>{{ archive.growth.current_xp }}/{{ archive.growth.next_level_xp }} XP</span>
+                                        <strong>−{{ archive.growth.remaining_xp }} XP al Lv. {{ archive.growth.level + 1 }}</strong>
+                                    </div>
+
+                                    <div class="growth-source-grid">
+                                        <span>
+        <b>{{ archive.growth.source_counts.letters }} {{ archive.growth.source_counts.letters == 1 ? 'lettera' : 'lettere' }}</b>
+        <small>10 XP ciascuna · {{ archive.growth.sources.letters }} XP</small>
+    </span>
+                                        <span>
+        <b>{{ archive.growth.source_counts.notes }} {{ archive.growth.source_counts.notes == 1 ? 'nota' : 'note' }}</b>
+        <small>30 XP ciascuna · {{ archive.growth.sources.notes }} XP</small>
+    </span>
+                                        <span>
+        <b>{{ archive.growth.source_counts.days }} {{ archive.growth.source_counts.days == 1 ? 'giorno' : 'giorni' }}</b>
+        <small>2 XP ciascuno · {{ archive.growth.sources.days }} XP</small>
+    </span>
+                                        <span>
+        <b>{{ archive.growth.source_counts.bridge_task ? 'BridgeTask iniziale' : 'Nessun BridgeTask' }}</b>
+        <small>Bonus fisso · {{ archive.growth.sources.bridge_task }} XP</small>
+    </span>
+                                    </div>
+
+                                    <div class="growth-roadmap">
+                                        <span class="roadmap-title">TUTTI I LIVELLI</span>
+                                        {% set level_stages = [
+                                            {min: 1, max: 4, title: 'Primo incontro'},
+                                            {min: 5, max: 9, title: 'Compagni di scambio'},
+                                            {min: 10, max: 19, title: 'Amici di penna'},
+                                            {min: 20, max: 39, title: 'Ponte culturale'},
+                                            {min: 40, max: null, title: 'Ambasciatori dell’amicizia'}
+                                        ] %}
+                                        {% for stage in level_stages %}
+                                            <div class="growth-roadmap-item {{ archive.growth.level > stage.max and stage.max ? 'is-complete' : (archive.growth.level >= stage.min and (stage.max is null or archive.growth.level <= stage.max) ? 'is-current' : 'is-future') }}">
+                                                <i aria-hidden="true"></i>
+                                                <span>
+                                                    <strong>{{ stage.title }}</strong>
+                                                    <small>Lv. {{ stage.min }}{{ stage.max ? '–' ~ stage.max : '+' }}</small>
+                                                </span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </details>
+                        </span>
+                        <em>
+                            {{ friend.city ?: 'Località non indicata' }}
+                            {% if friend.nationality %} · {{ friend.nationality }}{% endif %}
+                        </em>
+                    </span>
+                </div>
+
+                <section class="relationship-story" aria-labelledby="relationship-story-title">
+                    <span class="eyebrow">LA VOSTRA STORIA</span>
+                    <h2 id="relationship-story-title">Un ponte costruito insieme</h2>
+                    {% if connection.sourceTask %}
+                        <p>Il vostro ponte è iniziato da questa richiesta:</p>
+                        <a class="relationship-origin-task" href="{{ path('app_bridge_task_show', {id: connection.sourceTask.id}) }}">
+                            <span>{{ connection.sourceTask.category.name }}</span>
+                            <strong>{{ connection.sourceTask.title }}</strong>
+                            <small>Apri la richiesta <span aria-hidden="true">→</span></small>
+                        </a>
+                    {% else %}
+                        <p>Vi siete incontrati nella comunità BuddyBridge e avete scelto di continuare a conoscervi.</p>
+                    {% endif %}
+                </section>
+
+
+
+                <div class="relationship-stats">
+                    <div>
+                        <strong>{{ archive.letter_count }}</strong>
+                        <span>Lettere</span>
+                    </div>
+                    <div>
+                        <strong>{{ archive.days_together }}</strong>
+                        <span>Giorni insieme</span>
+                    </div>
+
+                </div>
+            </aside>
+
+            
+            <section class="letter-conversation" aria-label="Lettere con {{ friend.username }}">
+                <header class="letter-header">
+                    <div>
+                        <span class="profile-avatar small">{{ friend.username|slice(0, 1)|upper }}</span>
+                        <span>
+                            <strong>{{ friend.username }}</strong>
+                            <small>Corrispondenza privata</small>
+                        </span>
+                    </div>
+                    <div class="letter-header-actions">
+                        {% if archive.last_letter %}
+                            <span class="last-letter-date">
+                                Ultima lettera {{ archive.last_letter.createdAt|date('d/m/Y') }}
+                            </span>
+                        {% endif %}
+                        <button
+                            class="mobile-relationship-toggle"
+                            type="button"
+                            data-mobile-relationship-toggle
+                            aria-controls="relationship-panel"
+                            aria-expanded="false"
+                        >
+                            Profilo e percorso
+                        </button>
+                    </div>
+                </header>
+
+                <div class="letter-list" data-chat-messages tabindex="0">
+                    {% if message_pagination.currentPage == 1 %}
+                        <div class="correspondence-start">
+                            <span>
+                                Amici di penna dal
+                                {{ connection.acceptedAt ? connection.acceptedAt|date('d/m/Y') : connection.createdAt|date('d/m/Y') }}
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    {% for message in messages %}
+                        <article class="digital-letter {{ message.author == app.user ? 'is-mine' : '' }}">
+                            <header>
+                                <div>
+                                    <span class="letter-avatar">
+                                        {{ message.author.username|slice(0, 1)|upper }}
+                                    </span>
+                                    <span>
+                                        <small>DA</small>
+                                        <strong>{{ message.author.username }}</strong>
+                                    </span>
+                                </div>
+                                <time datetime="{{ message.createdAt|date('c') }}">
+                                    {{ message.createdAt|date('d/m/Y H:i') }}
+                                </time>
+                            </header>
+                            <div class="digital-letter-content">
+                                <h2>{{ message.subject ?: 'Una lettera per te' }}</h2>
+                                <p>{{ message.content|nl2br }}</p>
+                            </div>
+                            <footer>
+                                <span>BuddyBridge · Corrispondenza privata</span>
+                                <span aria-hidden="true">✦</span>
+                            </footer>
+                        </article>
+                    {% else %}
+                        <div class="letter-empty">
+                            <span aria-hidden="true">✉</span>
+                            <h2>Scrivi la vostra prima lettera</h2>
+                            <p>Presentati con calma e racconta qualcosa che vorresti condividere.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% include 'shared/_pagination.html.twig' with {
+                    pagination: message_pagination,
+                    route_name: 'app_penpal_chat',
+                    route_params: {id: connection.id},
+                    page_param: 'message_page'
+                } %}
+
+                
+                <form class="letter-form" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('message_' ~ connection.id) }}">
+                    <div class="letter-composer">
+                        <div class="letter-composer-heading">
+                            <span class="eyebrow">NUOVA LETTERA</span>
+                            <span>Per {{ friend.username }}</span>
+                        </div>
+                        <label for="letter-subject">Oggetto</label>
+                        <input
+                            id="letter-subject"
+                            name="subject"
+                            type="text"
+                            maxlength="150"
+                            placeholder="Un pensiero, una storia, una domanda..."
+                        >
+
+                        <label for="letter-content">La tua lettera</label>
+                        <div class="letter-body-field emoji-enabled-field">
+                            <textarea
+                                id="letter-content"
+                                name="content"
+                                rows="6"
+                                maxlength="4000"
+                                required
+                                data-chat-input
+                                data-letter-input
+                                placeholder="Prenditi il tempo per scrivere qualcosa di sincero..."
+                            ></textarea>
+                            {{ include('shared/_emoji_picker.html.twig', {compact: true}) }}
+                        </div>
+                        <div class="letter-form-meta">
+                            <span>Scrivi con calma, senza limiti minimi</span>
+                            <span><strong data-letter-counter>0</strong>/4000</span>
+                        </div>
+                    </div>
+                    <button class="letter-send-button" type="submit">
+                        <span>Invia la lettera</span>
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </form>
+            </section>
+        </div>
+        {{ include('penpal/_notebook.html.twig') }}
+    </div>
+{% endblock %}
+
+
+
+

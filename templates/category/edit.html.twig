@@ -1,0 +1,38 @@
+
+
+{# 修改分类页面：管理员修改分类名称或删除未使用的分类。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Modifica categoria
+{% endblock %}
+{% block body %}
+    <div class="editor-page">
+        <header class="compact-page-header">
+            <div>
+                <span class="eyebrow text-primary">AMMINISTRAZIONE</span>
+                <h1>Modifica categoria</h1>
+                <p>Aggiorna il nome senza cambiare le richieste già associate.</p>
+            </div>
+            <a class="btn btn-outline-secondary" href="{{ path('app_category_index') }}">Torna alle categorie</a>
+        </header>
+        <div class="editor-layout">
+            <section class="editor-card">
+                <div class="editor-card-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Nome della categoria</h2>
+                        <p>Attualmente utilizzata da {{ category.bridgeTasks|length }} richieste.</p>
+                    </div>
+                </div>
+                {{ include('category/_form.html.twig', {button_label:'Salva modifiche'}) }}
+            </section>
+            <aside class="editor-aside">
+                <div class="context-card danger-card">
+                    <span class="eyebrow">ZONA DI ATTENZIONE</span>
+                    <h2>Elimina categoria</h2>
+                    <p>È possibile eliminarla soltanto se non contiene richieste.</p>
+                    {{ include('category/_delete_form.html.twig') }}
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

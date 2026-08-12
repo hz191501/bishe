@@ -1,0 +1,51 @@
+
+
+{# 新增回答页面：让登录用户回复一个尚未关闭的帖子。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Nuova risposta
+{% endblock %}
+{% block body %}
+    <div class="editor-page">
+        <header class="compact-page-header">
+            <div>
+                <span class="eyebrow text-primary">AIUTA LA COMUNITÀ</span>
+                <h1>Scrivi una risposta</h1>
+                <p>Condividi ciò che sai in modo chiaro e rispettoso.</p>
+            </div>
+        </header>
+        <div class="editor-layout">
+            <section class="editor-card">
+                <div class="editor-card-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>La tua risposta</h2>
+                        <p>Spiega i passaggi e aggiungi esempi quando sono utili.</p>
+                    </div>
+                </div>
+                {{ include('task_response/_form.html.twig', {button_label:'Pubblica la risposta'}) }}
+            </section>
+            <aside class="editor-aside">
+                <div class="context-card question-context">
+                    <span class="eyebrow text-primary">STAI RISPONDENDO A</span>
+                    <h2>
+                        {{ bridge_task.title }}
+                    </h2>
+                    <p>
+                        {{ bridge_task.description|slice(0,220) }}
+                        {% if bridge_task.description|length > 220 %}…
+                        {% endif %}
+                    </p>
+                    <a href="{{ path('app_bridge_task_show', {id: bridge_task.id}) }}">Rileggi la richiesta →</a>
+                </div>
+                <div class="context-card tinted">
+                    <h3>Una risposta utile</h3>
+                    <ul>
+                        <li>va direttamente al punto;</li>
+                        <li>spiega il motivo del consiglio;</li>
+                        <li>rispetta esperienze e culture diverse.</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,256 @@
+
+/* 管理页面样式：管理员用户列表、搜索、统计和角色操作区域。 */
+
+.admin-users-page {
+    /* 管理员用户页面的最大宽度和居中方式。 */
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.admin-users-header {
+    /* 管理页顶部标题横幅。 */
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 26px;
+    color: #fff;
+    background: linear-gradient(125deg,var(--navy),#205e78 68%,var(--jade));
+}
+
+.admin-users-header .eyebrow {
+    color: #f4b29f;
+}
+
+.admin-users-header h1 {
+    margin: .5rem 0;
+    font-family: "Fraunces",serif;
+    font-size: clamp(2.5rem,4vw,4rem);
+}
+
+.admin-users-header p {
+    max-width: 650px;
+    margin: 0;
+    color: rgba(255,255,255,.75);
+}
+
+.admin-summary {
+    /* 管理员看到的用户数量统计。 */
+    display: grid;
+    grid-template-columns: repeat(2,minmax(130px,1fr));
+    gap: .75rem;
+}
+
+.admin-summary div {
+    padding: 1rem;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 16px;
+    background: rgba(255,255,255,.08);
+}
+
+.admin-summary strong,.admin-summary span {
+    display: block;
+}
+
+.admin-summary strong {
+    font-family: "Fraunces",serif;
+    font-size: 2rem;
+}
+
+.admin-summary span {
+    color: rgba(255,255,255,.68);
+    font-size: .75rem;
+}
+
+.admin-users-panel {
+    /* 搜索栏和用户列表外层的白色面板。 */
+    padding: 2rem;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--paper);
+    box-shadow: 0 12px 36px rgba(20,48,72,.06);
+}
+
+.admin-users-toolbar {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-users-toolbar h2 {
+    margin: 0;
+    font-family: "Fraunces",serif;
+}
+
+.admin-users-toolbar p {
+    margin: .2rem 0 0;
+    color: var(--muted);
+}
+
+.admin-user-search {
+    /* 管理员按昵称或邮箱搜索用户。 */
+    display: flex;
+    gap: .55rem;
+}
+
+.admin-user-search input {
+    min-width: 260px;
+    min-height: 42px;
+    padding: .6rem .85rem;
+    border: 1px solid #cfdbdf;
+    border-radius: 11px;
+    outline: none;
+}
+
+.admin-user-search input:focus {
+    border-color: var(--blue-light);
+    box-shadow: 0 0 0 3px rgba(40,121,168,.11);
+}
+
+.admin-user-list {
+    /* 用户卡片列表的纵向间距。 */
+    display: grid;
+    gap: .85rem;
+    padding-top: 1.25rem;
+}
+
+.admin-user-card {
+    /* 单个用户的资料、统计与角色按钮。 */
+    display: grid;
+    grid-template-columns: minmax(260px,1.4fr) minmax(260px,1fr) auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.15rem;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+}
+
+.admin-user-identity {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    min-width: 0;
+}
+
+.admin-user-identity > div {
+    min-width: 0;
+}
+
+.admin-user-name {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .55rem;
+}
+
+.admin-user-name h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.admin-user-identity a {
+    display: block;
+    overflow: hidden;
+    color: var(--blue);
+    font-size: .83rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-user-identity p {
+    margin: .15rem 0 0;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.admin-role-badge,.user-role-badge {
+    /* 区分管理员和普通用户的角色标签。 */
+    padding: .22rem .55rem;
+    border-radius: 999px;
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+.admin-role-badge {
+    color: #9d4636;
+    background: #fae7e1;
+}
+
+.user-role-badge {
+    color: var(--jade);
+    background: #e7f1ed;
+}
+
+.admin-user-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem 1rem;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.admin-user-stats strong {
+    color: var(--ink);
+}
+
+.admin-user-actions {
+    /* 每张用户卡片右侧的管理操作区域。 */
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: .55rem;
+}
+
+.admin-user-actions form {
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .admin-users-header,.admin-users-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .admin-user-card {
+        grid-template-columns: 1fr;
+    }
+    .admin-user-actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 575px) {
+    .admin-users-header,.admin-users-panel {
+        padding: 1.35rem;
+    }
+    .admin-summary {
+        width: 100%;
+        grid-template-columns: 1fr 1fr;
+    }
+    .admin-user-search {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .admin-user-search input {
+        width: 100%;
+        min-width: 0;
+    }
+    .admin-user-actions .btn,.admin-user-actions form {
+        width: 100%;
+    }
+    .admin-user-actions form .btn {
+        width: 100%;
+    }
+}
+
+
+.admin-users-header {
+    min-height: 310px;
+    background:
+        linear-gradient(90deg,rgba(12,43,72,.34),rgba(12,43,72,0) 72%),
+        url("/images/illustrations/admin-community.webp") 66% center/cover;
+}

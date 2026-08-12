@@ -1,0 +1,32 @@
+
+
+{# 隐私页面：向用户说明账号和社区数据的使用方式。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Privacy
+{% endblock %}
+{% block body %}
+    <article class="legal-page page-card">
+        <span class="eyebrow text-primary">INFORMAZIONI</span>
+        <h1>Informativa sulla privacy</h1>
+        <p class="meta">Ultimo aggiornamento: {{ 'now'|date('d/m/Y') }}
+        </p>
+        <h2>Dati raccolti</h2>
+        <p>
+            Per creare un account vengono memorizzati email, nome utente, nazionalità e città. La password viene
+            conservata esclusivamente in forma cifrata e non può essere visualizzata.
+        </p>
+        <h2>Finalità</h2>
+        <p>I dati servono per autenticare gli utenti, mostrare i profili, gestire richieste, risposte, amicizie e conversazioni.</p>
+        <h2>Visibilità</h2>
+        <p>
+            Email e password non vengono mostrate pubblicamente. Nome utente, città, nazionalità e attività
+            pubblicate possono essere visibili agli altri membri.
+        </p>
+        <h2>Buone pratiche</h2>
+        <p>
+            Non inserire nei contenuti pubblici informazioni sensibili non necessarie. Per un utilizzo reale in
+            produzione, il gestore dovrà indicare un contatto privacy e definire tempi di conservazione e procedure
+            di cancellazione.
+        </p>
+    </article>
+{% endblock %}

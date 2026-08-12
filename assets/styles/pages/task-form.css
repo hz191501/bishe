@@ -1,0 +1,367 @@
+
+/* 帖子表单样式：发布和修改帖子时使用的输入区域与操作按钮。 */
+
+.request-create-page {
+    /* 发布或修改帖子页面的外层宽度。 */
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.request-create-hero {
+    /* 发帖页顶部蓝色横幅及背景图片。 */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    padding: 2.6rem 3rem;
+    border-radius: 26px;
+    background: linear-gradient(125deg, var(--navy) 0%, #174b6d 62%, #2c756d 100%);
+    color: #fff;
+    box-shadow: 0 18px 50px rgba(16,47,79,.16);
+}
+
+.request-create-hero::after {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border: 45px solid rgba(255,255,255,.06);
+    border-radius: 50%;
+    right: -80px;
+    top: -120px;
+}
+
+.request-create-hero > div {
+    position: relative;
+    z-index: 1;
+}
+
+.request-create-hero .eyebrow {
+    color: #f3a58f;
+}
+
+.request-create-hero h1 {
+    max-width: 650px;
+    margin: .55rem 0 .6rem;
+    font-family: "Fraunces", serif;
+    font-size: clamp(2.25rem, 3.4vw, 3.35rem);
+    line-height: 1.03;
+}
+
+.request-create-hero p {
+    max-width: 620px;
+    margin: 0;
+    color: rgba(255,255,255,.76);
+}
+
+.request-progress {
+    /* 横幅右侧的“填写—检查—发布”步骤提示。 */
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    color: rgba(255,255,255,.58);
+    font-size: .72rem;
+    white-space: nowrap;
+}
+
+.request-progress span {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+}
+
+.request-progress b {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 50%;
+}
+
+.request-progress .active {
+    color: #fff;
+}
+
+.request-progress .active b {
+    border-color: var(--coral);
+    background: var(--coral);
+}
+
+.request-progress i {
+    width: 22px;
+    height: 1px;
+    background: rgba(255,255,255,.25);
+}
+
+
+.request-create-grid {
+    /* 电脑端左边表单、右边帮助说明的两列布局。 */
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(290px, .75fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+
+.request-form-panel {
+    /* 发布帖子表单的白色主卡片。 */
+    padding: 2.25rem;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--paper);
+    box-shadow: 0 12px 38px rgba(20,48,72,.07);
+}
+
+.panel-heading {
+    /* 表单卡片中的编号、标题和说明。 */
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1.4rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.panel-number {
+    display: grid;
+    place-items: center;
+    flex: 0 0 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: #e7f1f4;
+    color: var(--blue);
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+.panel-heading h2 {
+    margin: 0;
+    font-family: "Fraunces", serif;
+    font-size: 1.65rem;
+}
+
+.panel-heading p {
+    margin: .1rem 0 0;
+    color: var(--muted);
+    font-size: .88rem;
+}
+
+.request-field {
+    /* 一个完整表单字段，包括标签、输入框、帮助和错误信息。 */
+    margin-bottom: 1.35rem;
+}
+
+.request-field > label {
+    display: block;
+    margin: 0 0 .45rem;
+    color: var(--ink);
+    font-size: .9rem;
+}
+
+.request-field .form-control, .request-field .form-select {
+    /* 发帖输入框和分类下拉框的统一外观。 */
+    margin: 0;
+    border: 1px solid #cfdcdf;
+    border-radius: 13px;
+    background-color: #fff;
+    color: var(--ink);
+    box-shadow: none;
+}
+
+
+.request-field .form-control {
+    padding: .8rem 1rem;
+}
+
+.request-field textarea.form-control {
+    min-height: 170px;
+    line-height: 1.65;
+    resize: vertical;
+}
+
+.request-field .form-control:focus, .request-field .form-select:focus {
+    border-color: var(--blue-light);
+    box-shadow: 0 0 0 4px rgba(40,121,168,.11);
+}
+
+.request-field .form-text, .field-meta {
+    margin-top: .45rem;
+    color: var(--muted);
+    font-size: .76rem;
+}
+
+.field-meta {
+    /* 输入框下面的帮助文字与最大字符数。 */
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.field-meta .form-text {
+    margin: 0;
+}
+
+.request-field .invalid-feedback, .request-field .form-error-message {
+    display: block;
+    color: #b74333;
+    font-size: .78rem;
+}
+
+.request-form-actions {
+    /* 表单底部的取消和保存按钮。 */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .75rem;
+    padding-top: .5rem;
+}
+
+.request-form-actions .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.4rem;
+    padding: .7rem 1.2rem;
+}
+
+.request-sidebar {
+    /* 右侧帮助说明卡片的纵向容器。 */
+    display: grid;
+    gap: 1rem;
+}
+
+.guidance-card, .privacy-note {
+    /* 发帖提示和隐私提醒卡片。 */
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--paper);
+    padding: 1.4rem;
+}
+
+.accent-card {
+    border: 0;
+    background: #eaf3f1;
+}
+
+.guidance-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--jade);
+    color: #fff;
+}
+
+.guidance-card h2 {
+    margin: .9rem 0;
+    font-family: "Fraunces", serif;
+    font-size: 1.45rem;
+}
+
+.guidance-card h3 {
+    margin: .5rem 0 1rem;
+    font-size: 1.05rem;
+}
+
+.guidance-card ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.guidance-card li {
+    padding: .75rem 0;
+    border-top: 1px solid rgba(76,130,114,.18);
+    color: #49685f;
+    font-size: .83rem;
+}
+
+.guidance-card label {
+    display: flex;
+    gap: .65rem;
+    margin: .65rem 0;
+    color: var(--muted);
+    font-size: .82rem;
+    font-weight: 500;
+}
+
+.guidance-card label span {
+    color: var(--jade);
+    font-weight: 700;
+}
+
+.privacy-note {
+    display: flex;
+    gap: .75rem;
+    background: #fff7f2;
+    border-color: #f0d8ce;
+    color: #7d574b;
+}
+
+.privacy-note > span {
+    color: var(--coral);
+}
+
+.privacy-note p {
+    margin: 0;
+    font-size: .78rem;
+}
+
+@media (max-width: 991px) {
+    .request-create-hero {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .request-create-grid {
+        grid-template-columns: 1fr;
+    }
+    .request-sidebar {
+        grid-template-columns: 1fr 1fr;
+    }
+    .privacy-note {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 575px) {
+    .request-create-hero {
+        padding: 2rem 1.35rem;
+        border-radius: 20px;
+    }
+    .request-progress {
+        display: none;
+    }
+    .request-form-panel {
+        padding: 1.35rem;
+    }
+    .request-sidebar {
+        grid-template-columns: 1fr;
+    }
+    .privacy-note {
+        grid-column: auto;
+    }
+    .field-meta {
+        flex-direction: column;
+        gap: .2rem;
+    }
+    .request-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+    .request-form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+.request-create-hero {
+    min-height: 310px;
+    background:
+        linear-gradient(90deg,rgba(12,43,72,.36),rgba(12,43,72,0) 72%),
+        url("/images/illustrations/request-cafe.webp") 64% center/cover;
+}

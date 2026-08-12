@@ -1,0 +1,120 @@
+
+
+{# 帖子列表页面：显示搜索、分类和状态筛选、帖子卡片以及分页。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Richieste di aiuto{% endblock %}
+
+{% block body %}
+    
+    <header class="page-heading illustrated-banner illustrated-banner--request site-illustrated-hero">
+        <div class="illustrated-banner-content site-illustrated-hero__content">
+            <span class="eyebrow text-primary">LA COMUNITÀ</span>
+            <h1>Richieste di aiuto</h1>
+            <p>Domande linguistiche, universitarie e culturali della comunità.</p>
+            {% if app.user %}
+                <a class="btn btn-primary" href="{{ path('app_bridge_task_new') }}">Pubblica una richiesta</a>
+            {% endif %}
+        </div>
+    </header>
+
+    
+    <form class="filter-bar page-card mb-4" method="get">
+        <div class="filter-search">
+            <label for="q">Cerca</label>
+            <input id="q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="Titolo o parola chiave">
+        </div>
+        <div>
+            <label for="category">Categoria</label>
+            <select id="category" class="form-select" name="category">
+                <option value="">Tutte</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {{ filters.category == category.id ? 'selected' : '' }}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="status">Stato</label>
+            <select id="status" class="form-select" name="status">
+                <option value="">Tutti</option>
+                <option value="open" {{ filters.status == 'open' ? 'selected' : '' }}>Aperte</option>
+                <option value="resolved" {{ filters.status == 'resolved' ? 'selected' : '' }}>Risolte</option>
+            </select>
+        </div>
+        
+        <div class="filter-actions">
+            <span class="filter-actions-label" aria-hidden="true">Azioni</span>
+            <div class="filter-actions-buttons">
+                <button class="btn btn-primary" type="submit">Filtra</button>
+                {% if filters.q or filters.status or filters.category %}
+                    <a class="btn btn-outline-secondary" href="{{ path('app_bridge_task_index') }}">Azzera</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    <div class="results-summary mb-3">
+        <strong>{{ pagination.totalItems }}</strong>
+        {{ pagination.totalItems == 1 ? 'richiesta trovata' : 'richieste trovate' }}
+    </div>
+
+    <div class="row g-4">
+    {# 当前页没有结果时会进入 for...else 的空状态区块。 #}
+    {% for bridge_task in bridge_tasks %}
+            <div class="col-md-6 col-lg-4">
+                {# 分类 ID 决定左侧边框颜色，与首页分类卡片保持一致。 #}
+                <article class="task-card p-4 category-theme--{{ bridge_task.category.id }}">
+                    <div class="d-flex justify-content-between gap-2">
+                        <span class="soft-badge category-badge">
+                            {% include 'shared/_category_icon.html.twig' with {category: bridge_task.category} only %}
+                            {{ bridge_task.category.name }}
+                        </span>
+                        <span class="status-dot {{ bridge_task.status == 'resolved' ? 'resolved' : '' }}">
+                            {{ bridge_task.status == 'resolved' ? 'Risolta' : 'Aperta' }}
+                        </span>
+                    </div>
+                    <h2 class="h5 mt-3">{{ bridge_task.title }}</h2>
+                    <p>
+                        {{ bridge_task.description|slice(0, 150) }}{% if bridge_task.description|length > 150 %}…{% endif %}
+                    </p>
+                    <p class="meta">
+                        Pubblicata da
+                        <a href="{{ path('app_profile_show', {id: bridge_task.author.id}) }}">{{ bridge_task.author.username }}</a>
+                        il {{ bridge_task.createdAt|date('d/m/Y H:i') }}
+                    </p>
+                    <div class="task-card-footer">
+                        <span class="task-card-count">
+                            {{ bridge_task.responses|length }} {{ bridge_task.responses|length == 1 ? 'risposta' : 'risposte' }}
+                        </span>
+                        {#
+                           把当前列表的页码和筛选条件带到详情页。
+                           详情页的“返回”按钮会使用这些参数回到用户刚才浏览的位置。
+                        #}
+                        <a class="btn btn-outline-primary btn-sm" href="{{ path('app_bridge_task_show', {
+                            id: bridge_task.id,
+                            return_page: pagination.currentPage,
+                            return_q: filters.q,
+                            return_status: filters.status,
+                            return_category: filters.category
+                        }) }}">
+                            Apri richiesta <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <h2>Nessun risultato</h2>
+                    <p>Prova a cambiare le parole cercate o a rimuovere un filtro.</p>
+                    <a class="btn btn-outline-primary" href="{{ path('app_bridge_task_index') }}">Mostra tutte le richieste</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% include 'shared/_pagination.html.twig' with {
+        pagination: pagination,
+        route_name: 'app_bridge_task_index'
+    } only %}
+{% endblock %}

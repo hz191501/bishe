@@ -1,0 +1,35 @@
+
+
+{# 社区介绍区：说明帖子交流可以进一步发展成好友关系。 #}
+<section class="community-life-section my-5">
+    <div class="community-life-visual" role="img" aria-label="Studenti cinesi e italiani trascorrono insieme il tempo libero">
+    </div>
+    <div class="community-life-copy">
+        <p class="eyebrow">OLTRE LE DOMANDE</p>
+        <h2>Una comunità vive anche nel tempo libero.</h2>
+        <p class="community-life-lead">
+            BuddyBridge avvicina persone con lingue, abitudini e interessi diversi.
+            Una risposta può diventare una conversazione, un’uscita o una nuova amicizia.
+        </p>
+        <div class="community-life-points">
+            <div>
+                <span>01</span>
+                <p>
+                    <strong>Interessi condivisi</strong>Musica, giochi, viaggi e vita quotidiana.</p>
+            </div>
+            <div>
+                <span>02</span>
+                <p>
+                    <strong>Scambio autentico</strong>Conoscersi con naturalezza, senza lezioni formali.</p>
+            </div>
+            <div>
+                <span>03</span>
+                <p>
+                    <strong>Nuove prospettive</strong>Scoprire l’Italia e la Cina attraverso le persone.</p>
+            </div>
+        </div>
+        <a class="btn btn-light" href="{{ app.user ? path('app_penpal_index') : path('app_register') }}">
+            {{ app.user ? 'Scopri gli amici di penna' : 'Entra nella comunità' }}
+        </a>
+    </div>
+</section>

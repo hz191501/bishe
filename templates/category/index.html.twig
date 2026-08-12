@@ -1,0 +1,52 @@
+﻿
+
+{# 分类总览页面：显示全部分类；管理员额外看到新增和修改操作。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Categorie
+{% endblock %}
+{% block body %}
+    <div class="editor-page">
+        <header class="compact-page-header category-overview-hero site-illustrated-hero">
+            <div>
+                <span class="eyebrow text-primary">ORGANIZZAZIONE</span>
+                <h1>Categorie</h1>
+                <p>Gestisci gli ambiti utilizzati per organizzare le richieste della comunità.</p>
+            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-primary category-create-button" href="{{ path('app_category_new') }}">Nuova categoria <span aria-hidden="true">＋</span>
+                </a>
+            {% endif %}
+        </header>
+        <div class="admin-category-grid">
+            {% for category in categories %}
+                <article class="admin-category-card">
+                    <div class="category-card-top">
+                        <span class="category-letter">
+                            {{ category.name|slice(0,1)|upper }}
+                        </span>
+                        <span class="soft-badge">
+                            {{ category.bridgeTasks|length }}
+                            {{ category.bridgeTasks|length == 1 ? 'richiesta' : 'richieste' }}
+                        </span>
+                    </div>
+                    <h2>
+                        {{ category.name }}
+                    </h2>
+                    <p>Raccoglie le richieste relative a questo ambito.</p>
+                    <div class="category-card-actions">
+                        <a class="category-action-button category-action-button--outline" href="{{ path('app_category_show', {id:category.id}) }}">Visualizza</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a class="category-action-button category-action-button--primary" href="{{ path('app_category_edit', {id:category.id}) }}">Modifica <span aria-hidden="true">→</span></a>
+                        {% endif %}
+                    </div>
+                </article>
+            {% else %}
+                    <div class="empty-state">
+                        <h2>Nessuna categoria</h2>
+                        <p>Crea la prima categoria per organizzare le richieste.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
+

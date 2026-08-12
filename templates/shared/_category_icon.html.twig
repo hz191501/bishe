@@ -1,0 +1,45 @@
+{# 分类小图标：根据数据库中的分类 ID 显示固定图标，供帖子标签重复使用。 #}
+{% set category_id = category.id %}
+<span class="category-badge-icon" aria-hidden="true">
+    {% if category_id == 1 %}
+        {# 语言纠正：对话气泡和字母。 #}
+        <svg viewBox="0 0 24 24">
+            <path d="M5 5.5h14v9H10l-4 3v-3H5z"/>
+            <path d="M10 12l2-4 2 4M10.8 10.5h2.4"/>
+        </svg>
+    {% elseif category_id == 4 %}
+        {# 文化习惯：茶杯代表日常交流。 #}
+        <svg viewBox="0 0 24 24">
+            <path d="M5 9h11v4.5A4.5 4.5 0 0 1 11.5 18h-2A4.5 4.5 0 0 1 5 13.5z"/>
+            <path d="M16 10h1.5a2 2 0 0 1 0 4H16M7 5.5c0 1 1 1 1 2M11 5.5c0 1 1 1 1 2"/>
+        </svg>
+    {% elseif category_id == 3 %}
+        {# 文件手续：带文字线的文件。 #}
+        <svg viewBox="0 0 24 24">
+            <path d="M6.5 3.5h7l4 4v13h-11z"/>
+            <path d="M13.5 3.5v4h4M9 12h6M9 15.5h6"/>
+        </svg>
+    {% elseif category_id == 6 %}
+        {# 中意学习：地球表示跨文化学习。 #}
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="8.5"/>
+            <path d="M3.5 12h17M12 3.5c2.2 2.3 3.2 5.1 3.2 8.5S14.2 18.2 12 20.5M12 3.5C9.8 5.8 8.8 8.6 8.8 12s1 6.2 3.2 8.5"/>
+        </svg>
+    {% elseif category_id == 5 %}
+        {# 日常生活：房屋轮廓。 #}
+        <svg viewBox="0 0 24 24">
+            <path d="M3.5 11.5 12 4l8.5 7.5M6 10v10h12V10M10 20v-6h4v6"/>
+        </svg>
+    {% elseif category_id == 2 %}
+        {# 大学生活：学士帽。 #}
+        <svg viewBox="0 0 24 24">
+            <path d="m3 9 9-4 9 4-9 4zM6.5 11v5c3.5 2.5 7.5 2.5 11 0v-5M21 9v6"/>
+        </svg>
+    {% else %}
+        {# 管理员以后新增分类时显示通用信息图标。 #}
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="8.5"/>
+            <path d="M12 10.5v6M12 7.5h.01"/>
+        </svg>
+    {% endif %}
+</span>

@@ -1,0 +1,65 @@
+
+
+{# 登录页面：显示账号密码表单、错误信息和注册链接。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Accesso
+{% endblock %}
+{% block body %}
+    <div class="auth-shell">
+        <section class="auth-visual">
+            <span class="eyebrow">BENTORNATO</span>
+            <h1>Le conversazioni continuano da qui.</h1>
+            <p>Accedi per pubblicare richieste, aiutare altri studenti e scrivere ai tuoi amici di penna.</p>
+            <div class="auth-points">
+                <span>✓ Richieste e risposte</span>
+                <span>✓ Scambio interculturale</span>
+                <span>✓ Conversazioni private</span>
+            </div>
+        </section>
+        <section class="auth-panel">
+            <div class="auth-panel-heading">
+                <img class="brand-mark" src="{{ asset('images/buddybridge-mark.svg') }}" alt="">
+                <div>
+                    <h2>Accedi a BuddyBridge</h2>
+                    <p>Inserisci le credenziali del tuo account.</p>
+                </div>
+            </div>
+            <form class="polished-form" method="post">
+                {% if error %}
+                    <div class="alert alert-danger">Email o password non corretti.</div>
+                {% endif %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Email</label>
+                    <input
+                        type="email"
+                        value="{{ last_username }}"
+                        name="_username"
+                        id="username"
+                        class="form-control form-control-lg"
+                        placeholder="nome@esempio.it"
+                        autocomplete="email"
+                        required
+                        autofocus
+                        >
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                        type="password"
+                        name="_password"
+                        id="password"
+                        class="form-control form-control-lg"
+                        placeholder="La tua password"
+                        autocomplete="current-password"
+                        required
+                        >
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button class="btn btn-primary btn-lg w-100" type="submit">Accedi <span aria-hidden="true">→</span>
+                </button>
+            </form>
+            <p class="auth-switch">Non hai un account? <a href="{{ path('app_register') }}">Registrati gratuitamente</a>
+            </p>
+        </section>
+    </div>
+{% endblock %}

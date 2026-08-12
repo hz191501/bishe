@@ -1,0 +1,62 @@
+
+
+{# 最新帖子区：首页只展示控制器传入的最近三条帖子。 #}
+<section class="section-block home-latest-section mb-5">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow text-primary">DALLA COMUNITÀ</span>
+            <h2>Richieste recenti</h2>
+        </div>
+        <a class="text-link" href="{{ path('app_bridge_task_index') }}">Vedi tutte →</a>
+    </div>
+    <div class="row g-4">
+        {% for task in latest_tasks %}
+            <div class="col-lg-4">
+                {# 分类 ID 决定主题色，帖子排序改变时颜色仍与分类保持一致。 #}
+                <article class="home-task-card category-theme--{{ task.category.id }}">
+                    <div class="d-flex justify-content-between">
+                        <span class="soft-badge category-badge">
+                            {% include 'shared/_category_icon.html.twig' with {category: task.category} only %}
+                            {{ task.category.name }}
+                        </span>
+                        <span class="status-dot {{ task.status == 'resolved' ? 'resolved' : '' }}">
+                            {{ task.status == 'resolved' ? 'Risolta' : 'Aperta' }}
+                        </span>
+                    </div>
+                    <h3>{{ task.title }}</h3>
+                    <p>
+                        {{ task.description|slice(0, 120) }}
+                        {% if task.description|length > 120 %}…{% endif %}
+                    </p>
+                    <div class="task-footer">
+                        <span>{{ task.author.username }}</span>
+                        <a href="{{ path('app_bridge_task_show', {id: task.id}) }}">Apri →</a>
+                    </div>
+                </article>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state empty-state--illustrated">
+                    <div class="empty-state-copy">
+                        <span class="empty-state-index">01 / INIZIA TU</span>
+                        <h3>La prima richiesta può essere la tua.</h3>
+                        <p>Una domanda concreta può aprire una conversazione utile e avvicinare due persone.</p>
+                        <div class="empty-state-actions">
+                            {% if app.user %}
+                                <a class="btn btn-primary" href="{{ path('app_bridge_task_new') }}">Pubblica una richiesta</a>
+                            {% else %}
+                                <a class="btn btn-primary" href="{{ path('app_register') }}">Registrati per iniziare</a>
+                            {% endif %}
+                            <a class="text-link" href="{{ path('app_bridge_task_index') }}">Scopri come funziona →</a>
+                        </div>
+                    </div>
+                    <div
+                        class="empty-state-visual"
+                        role="img"
+                        aria-label="Due studenti si ascoltano e condividono una domanda"
+                    ></div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>

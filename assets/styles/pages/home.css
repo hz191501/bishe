@@ -1,0 +1,728 @@
+
+
+/* 首页专用样式：首页横幅、统计、分类、最新帖子和行动按钮。 */
+
+/* 顶部横幅：电脑端左右两栏，左边文字、右边插图。 */
+.hero-shell {
+    display: grid;
+    min-height: 480px;
+    grid-template-columns: 1.02fr .98fr;
+    overflow: hidden;
+    border-radius: 26px;
+    background: var(--navy);
+    box-shadow: 0 22px 55px rgba(16,47,79,.16);
+}
+
+
+.hero-copy {
+    /* 横幅左侧文字垂直居中；标题和按钮仍保持左对齐。 */
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(2.4rem,4vw,4rem);
+    color: #fff;
+}
+
+.hero-copy .eyebrow,
+.community-life-copy .eyebrow,
+.final-cta .eyebrow,
+.how-intro .eyebrow {
+    color: #f49a80;
+}
+
+
+.hero-copy h1 {
+    margin: .8rem 0 1.15rem;
+    font-family: "Fraunces",Georgia,serif;
+    font-size: clamp(2.75rem,4.3vw,4.45rem);
+    line-height: .98;
+    letter-spacing: -.035em;
+}
+
+.hero-copy > p {
+    max-width: 560px;
+    margin: 0;
+    color: rgba(255,255,255,.82);
+    font-size: 1.05rem;
+    line-height: 1.65;
+}
+
+.hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem 1.15rem;
+    color: rgba(255,255,255,.76);
+    font-size: .82rem;
+}
+
+.hero-trust span::before {
+    content: "✓";
+    margin-right: .3rem;
+    color: #9bc7b9;
+}
+
+.hero-visual {
+    /* 横幅右侧插图容器。 */
+    position: relative;
+    min-height: 420px;
+}
+
+
+.hero-visual::before {
+    /* 在图片左侧增加渐变，使文字区和图片自然衔接。 */
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 90px; 
+    background: linear-gradient(90deg, var(--navy) 0%, rgba(16, 47, 79, .72) 30%, rgba(16, 47, 79, 0) 100%);
+    content: "";
+    pointer-events: none;
+}
+
+
+.hero-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 58% center;
+}
+
+
+/* 首页统计数字区域。 */
+.stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--paper);
+    box-shadow: 0 10px 28px rgba(16,47,79,.07);
+}
+
+.stats-strip > div {
+    padding: 1.15rem 1rem;
+    text-align: center;
+}
+
+.stats-strip > div + div {
+    border-left: 1px solid var(--line);
+}
+
+.stats-strip strong {
+    display: block;
+    color: var(--navy);
+    font-family: "Fraunces",Georgia,serif;
+    font-size: 1.75rem;
+    line-height: 1;
+}
+
+.stats-strip span {
+    display: block;
+    margin-top: .35rem;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.section-block {
+    /* 首页每个独立内容区块的通用外边距。 */
+    position: relative;
+}
+
+.section-heading h2 {
+    /* 首页各区块的大标题。 */
+    margin-top: .35rem;
+}
+
+.home-categories-section .section-heading > div {
+    flex: 0 0 auto;
+}
+
+.home-categories-section .section-heading h2 {
+    white-space: nowrap;
+}
+
+
+/* 分类卡片：宽屏一行 6 个，下面的媒体查询会在小屏幕减少列数。 */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(6,minmax(0,1fr));
+    gap: .9rem;  }
+
+.category-tile {
+    /* 单个分类卡片：使用纵向 flex，让标题和数量自然排列。 */
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 150px;  flex-direction: column;
+    padding: 1.1rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--paper);
+    color: var(--navy);
+    text-decoration: none;
+    transition: transform .2s ease,box-shadow .2s ease;
+}
+
+.category-tile:hover {
+    /* 鼠标经过分类时轻微上浮，只是视觉反馈。 */
+    color: var(--navy);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(16,47,79,.1);  }
+
+
+.category-icon {
+    /* 分类卡片左上角的淡色线条图标。 */
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 13px;
+    background: #e8f1f5;
+    color: #236c91;
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+.category-icon svg {
+    width: 25px;
+    height: 25px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.55;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: .62;
+}
+
+.category-tile--2 .category-icon,
+.category-tile--4 
+.category-icon { background:#f8e8e2;color:#cf6248; }
+.category-tile--3 .category-icon,
+.category-tile--6 
+.category-icon { background:#e6f0ec;color:#4a8977; }
+
+
+.category-number {
+    /* 分类卡片右上角的顺序编号。 */
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #c5d2d8;
+    font-family: "Fraunces",serif;
+}
+
+.category-tile h3 {
+    margin: 1rem 0 .25rem;
+    font-size: .96rem;
+    line-height: 1.25;
+}
+
+.category-tile p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.category-arrow {
+    position: absolute;
+    right: 1rem;
+    bottom: .85rem;
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+
+.category-tile:hover .category-arrow { opacity:1; }
+
+
+.home-task-card {
+    /* 首页“最新帖子”中的单个帖子卡片。 */
+    display: flex;
+    height: 100%;
+    min-height: 260px; flex-direction: column;
+    padding: 1.35rem;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--paper);
+    box-shadow: 0 8px 24px rgba(16,47,79,.055);
+}
+
+.home-task-card h3 {
+    margin: 1rem 0 .65rem;
+    color: var(--navy);
+    font-family: "Fraunces",Georgia,serif;
+    font-size: 1.25rem;
+    line-height: 1.24;
+}
+
+
+.home-task-card > p {
+    display: -webkit-box;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    color: var(--muted);
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+}
+
+
+.task-footer {
+    /* 最新帖子卡片底部的作者和打开链接。 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: .9rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: .82rem;
+}
+
+.task-footer a { color:#176d9d;font-weight:700;text-decoration:none; }
+
+
+/* “如何使用”步骤区域。 */
+.how-section {
+    display: grid;
+    grid-template-columns: .8fr 1.2fr;
+    overflow: hidden;
+    border-radius: 24px; background: #edf4f3;
+}
+
+.how-intro {
+    padding: clamp(2rem,3.5vw,3rem);
+    background: var(--jade);
+    color: #fff;
+}
+
+.how-intro h2 {
+    margin: .75rem 0 1rem;
+    font-family: "Fraunces",Georgia,serif;
+    font-size: clamp(2rem,3vw,2.8rem);
+    line-height: 1.05;
+}
+
+.how-intro p { margin:0;color:rgba(255,255,255,.82);line-height:1.6; }
+
+.steps-list { padding: 1.4rem 2.25rem; }
+
+.step-row {
+    /* 单个步骤：左边编号，右边标题和说明。 */
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #cbded9;
+}
+.step-row:last-child { border-bottom:0; }
+.step-row > span { color:var(--jade);font-family:"Fraunces",serif;font-size:1.2rem;font-weight:700; }
+.step-row h3 { margin:0 0 .25rem;color:var(--navy);font-size:.98rem; }
+.step-row p { margin:0;color:var(--muted);font-size:.86rem;line-height:1.5; }
+
+
+/* 社区生活介绍：左边图片，右边说明文字。 */
+.community-life-section {
+    display: grid;
+    min-height: 420px;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    border-radius: 26px;
+    background: #174568;
+    box-shadow: 0 18px 45px rgba(16,47,79,.12);
+}
+
+.community-life-visual {
+    min-height: 420px;
+    background: url("/images/illustrations/home-community-life.webp") center / cover no-repeat;
+}
+
+.community-life-copy {
+    /* 社区介绍右侧的深蓝文字区域。 */
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(2rem,3.5vw,3.25rem);
+    color: #fff;
+}
+
+.community-life-copy h2 {
+    margin: .65rem 0 1rem;
+    font-family: "Fraunces",Georgia,serif;
+    font-size: clamp(2.05rem,3vw,3.1rem);
+    line-height: 1.05;
+}
+
+.community-life-lead { color:rgba(255,255,255,.8);line-height:1.65; }
+.community-life-points { width:100%;margin:.75rem 0 1.25rem; }
+.community-life-copy > .btn { align-self:center; }
+/* 上面的 align-self 只让按钮水平居中，不改变标题的左对齐。 */
+.community-life-points > div {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: .75rem;
+    padding: .7rem 0;
+    border-top: 1px solid rgba(255, 255, 255, .15);
+}
+.community-life-points span { color:#f49a80;font-family:"Fraunces",serif;font-weight:700; }
+.community-life-points p { margin:0;color:rgba(255,255,255,.76);font-size:.84rem;line-height:1.45; }
+.community-life-points strong { display:block;color:#fff;font-size:.9rem; }
+
+
+/* 页面底部的发帖或注册行动区域。 */
+.final-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: clamp(2rem,3.5vw,3rem);
+    border-radius: 24px; background: #e96f50;
+    color: #fff;
+}
+
+.final-cta h2 {
+    max-width: 760px;
+    margin: .45rem 0 0;
+    font-family: "Fraunces",Georgia,serif;
+    font-size: clamp(1.9rem,2.8vw,2.8rem);
+    line-height: 1.08;
+}
+
+
+.empty-state--illustrated {
+    /* 首页没有最新帖子时，使用文字加插图的两列空状态。 */
+    display: grid;
+    grid-template-columns: 1fr .85fr;
+    min-height: 260px; padding: 0;
+    overflow: hidden;
+    border: 1px dashed #b8ccd5;
+    border-radius: 20px;
+    background: var(--paper);
+    text-align: left;
+}
+.empty-state-copy { display:flex;align-items:flex-start;flex-direction:column;justify-content:center;padding:2rem; }
+.empty-state-index { color:#1d78a8;font-size:.72rem;font-weight:800;letter-spacing:.12em; }
+.empty-state-copy h3 { margin:.65rem 0;color:var(--navy);font-family:"Fraunces",serif;font-size:clamp(1.7rem,2.5vw,2.35rem); }
+.empty-state-actions { display:flex;align-items:center;flex-wrap:wrap;gap:1rem;margin-top:.5rem; }
+
+.empty-state-visual {
+    min-height: 260px; background:
+        linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 18%),
+        url("/images/illustrations/recent-conversation.webp") center / cover no-repeat;
+}
+
+/* 以下媒体查询负责平板和手机端布局，不会影响宽屏电脑。 */
+@media (max-width: 1199px) {
+    
+.category-grid { grid-template-columns:repeat(3,1fr); }
+}
+
+@media (max-width: 991px) {
+    .hero-shell,.how-section,
+.community-life-section { grid-template-columns:1fr; }
+    .hero-visual { height:340px;min-height:340px; }
+    
+    .hero-visual::before { display:none; }
+    .community-life-visual { min-height:340px; }
+}
+
+@media (max-width: 767px) {
+    .hero-shell,
+.community-life-section { border-radius:20px; }
+    
+    .hero-copy { padding:1.6rem 1.25rem; }
+
+    
+    .hero-copy h1 {
+        margin:.65rem 0 .9rem;
+        font-size:clamp(2.25rem,10.5vw,3rem);
+        line-height:1;
+    }
+
+    .hero-copy > p {
+        font-size:.95rem;
+        line-height:1.5;
+    }
+
+    
+    .hero-copy > .d-flex {
+        display:grid !important;
+        width:100%;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:.7rem !important;
+        margin-top:1.35rem !important;
+    }
+
+    .hero-copy > .d-flex .btn {
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:48px;
+        padding:.65rem .45rem !important;
+        font-size:.88rem;
+        line-height:1.2;
+        text-align:center;
+    }
+
+    
+    .hero-trust {
+        gap:.4rem .8rem;
+        margin-top:1.25rem !important;
+        font-size:.72rem;
+    }
+
+    
+    .hero-visual {
+        height:290px;
+        min-height:290px;
+    }
+    
+.stats-strip { grid-template-columns:1fr 1fr; }
+    .stats-strip > div:nth-child(3) { border-left:0;border-top:1px solid var(--line); }
+    .stats-strip > div:nth-child(4) { border-top:1px solid var(--line); }
+    
+.category-grid { grid-template-columns:1fr 1fr; }
+    .steps-list { padding:1rem 1.35rem; }
+    .community-life-copy { padding:2rem 1.5rem; }
+    
+.final-cta { align-items:flex-start;flex-direction:column; }
+.final-cta > .btn { align-self:center; }
+    
+.empty-state--illustrated { grid-template-columns:1fr; }
+    .empty-state-visual { min-height:220px; }
+}
+
+@media (max-width: 479px) {
+    
+    .home-categories-section .section-heading h2 {
+        white-space: normal;
+    }
+    
+.category-grid { grid-template-columns:1fr; }
+}
+
+
+.home-page > .section-block {
+    /* 给首页内容卡片增加统一边框、渐变背景和阴影。 */
+    padding: clamp(1.2rem, 2vw, 1.75rem);  border: 1px solid rgba(31, 95, 139, .12); border-radius: 24px; background:
+        radial-gradient(circle at 100% 0, rgba(76, 130, 114, .09), transparent 34%),
+        linear-gradient(145deg, rgba(255, 253, 249, .92), rgba(237, 244, 243, .72));
+    box-shadow: 0 14px 36px rgba(16, 47, 79, .065);  }
+
+.home-latest-section {
+    /* 最新帖子区域使用单独的浅色背景。 */
+    background:
+        radial-gradient(circle at 0 0, rgba(229, 111, 81, .08), transparent 30%),
+        linear-gradient(145deg, rgba(255, 253, 249, .94), rgba(234, 242, 245, .7));
+}
+
+
+
+.category-tile {
+    /* 第一类：柔和蓝色。 */
+    --tile-accent: #3b82a8;
+    --tile-wash: #e9f5fb;
+    border-color: rgba(31, 95, 139, .18);
+    background:
+        linear-gradient(145deg, rgba(255,255,255,.98) 35%, color-mix(in srgb, var(--tile-wash) 72%, white) 100%);
+    box-shadow: inset 0 1px 0 #fff, 0 8px 20px rgba(16, 47, 79, .055);
+}
+
+.category-tile::before {
+    /* 右侧的淡色光斑增加层次，但不会影响文字阅读。 */
+    position: absolute;
+    top: -38px;
+    right: -34px;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle, color-mix(in srgb, var(--tile-accent) 13%, transparent) 0 42%, transparent 43%),
+        radial-gradient(circle at 30% 72%, color-mix(in srgb, var(--tile-accent) 9%, transparent) 0 18%, transparent 19%);
+    content: "";
+    transition: transform .25s ease, opacity .25s ease;
+    opacity: .8;
+}
+
+.category-tile > * {
+    z-index: 1;
+}
+
+.category-tile::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background: var(--tile-accent);
+    content: "";
+    opacity: .9;
+}
+
+/* 固定按分类 ID 分配颜色，避免帖子排序或分页后颜色发生变化。 */
+.category-theme--1 {
+    /* 语言纠正：蓝色。 */
+    --tile-accent: #3b82a8;
+    --tile-wash: #e9f5fb;
+}
+
+.category-theme--4 {
+    /* 文化习惯：橙色。 */
+    --tile-accent: #df7a5f;
+    --tile-wash: #fff0ea;
+}
+
+.category-theme--3 {
+    /* 文件手续：绿色。 */
+    --tile-accent: #53937f;
+    --tile-wash: #eaf5f0;
+}
+
+.category-theme--6 {
+    /* 中意学习：紫色。 */
+    --tile-accent: #8b78b5;
+    --tile-wash: #f2eefb;
+}
+
+.category-theme--5 {
+    /* 日常生活：黄色。 */
+    --tile-accent: #c69a3e;
+    --tile-wash: #fff7df;
+}
+
+.category-theme--2 {
+    /* 大学生活：青色。 */
+    --tile-accent: #4b9a9b;
+    --tile-wash: #e8f7f6;
+}
+
+.category-tile .category-icon {
+    width: 48px;
+    height: 48px;
+    border: 1px solid color-mix(in srgb, var(--tile-accent) 16%, transparent);
+    background: color-mix(in srgb, var(--tile-accent) 11%, white);
+    box-shadow: 0 6px 14px color-mix(in srgb, var(--tile-accent) 10%, transparent);
+    color: var(--tile-accent);
+    transition: transform .25s ease, background-color .25s ease;
+}
+
+.category-tile .category-icon svg {
+    width: 28px;
+    height: 28px;
+    opacity: .78;
+}
+
+.category-tile .category-number {
+    color: color-mix(in srgb, var(--tile-accent) 27%, #c8d3d9);
+}
+
+.category-tile:hover {
+    border-color: color-mix(in srgb, var(--tile-accent) 48%, white);
+    box-shadow: 0 15px 32px rgba(16, 47, 79, .12);
+}
+
+.category-tile:hover::before {
+    transform: scale(1.08) translate(-3px, 3px);
+    opacity: 1;
+}
+
+.category-tile:hover .category-icon {
+    transform: translateY(-2px) rotate(-2deg);
+    background: color-mix(in srgb, var(--tile-accent) 16%, white);
+}
+
+
+.home-task-card {
+    position: relative;
+    overflow: hidden;
+    border-color: color-mix(in srgb, var(--tile-accent, #3b82a8) 22%, #dbe6e9);
+    background: linear-gradient(160deg, #fff 54%, color-mix(in srgb, var(--tile-accent, #3b82a8) 5%, white));
+    box-shadow: inset 0 1px 0 #fff, 0 10px 26px rgba(16, 47, 79, .075);
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.home-task-card::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: var(--tile-accent, #3b82a8);
+    content: "";
+}
+
+.home-task-card .soft-badge {
+    background: color-mix(in srgb, var(--tile-accent, #3b82a8) 10%, white);
+    color: color-mix(in srgb, var(--tile-accent, #3b82a8) 82%, var(--navy));
+}
+
+.home-task-card:hover {
+    border-color: color-mix(in srgb, var(--tile-accent, #3b82a8) 46%, white);
+    box-shadow: 0 16px 34px rgba(16, 47, 79, .12);
+    transform: translateY(-3px);
+}
+
+/* 帖子总列表左侧边框和分类标签也使用相同的分类主题色。 */
+.task-card[class*="category-theme--"] {
+    border-color: color-mix(in srgb, var(--tile-accent, #3b82a8) 20%, #dbe6e9);
+}
+
+.task-card[class*="category-theme--"]::before {
+    background: var(--tile-accent, #3b82a8);
+}
+
+.task-card[class*="category-theme--"] .soft-badge {
+    background: color-mix(in srgb, var(--tile-accent, #3b82a8) 10%, white);
+    color: color-mix(in srgb, var(--tile-accent, #3b82a8) 82%, var(--navy));
+}
+
+/* 帖子分类标签：复用上方分类卡片的线性图标，但缩小尺寸，避免抢过帖子标题。 */
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .38rem;
+}
+
+.category-badge-icon {
+    display: inline-flex;
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+    align-items: center;
+    justify-content: center;
+    color: var(--tile-accent, #3b82a8);
+}
+
+.category-badge-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+/* 帖子详情页也使用相同的分类色和图标色。 */
+.question-hero[class*="category-theme--"] .soft-badge {
+    background: color-mix(in srgb, var(--tile-accent, #3b82a8) 10%, white);
+    color: color-mix(in srgb, var(--tile-accent, #3b82a8) 82%, var(--navy));
+}
+
+@media (max-width: 767px) {
+    .home-page > .section-block {
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    .category-badge-icon {
+        width: 15px;
+        height: 15px;
+        flex-basis: 15px;
+    }
+}

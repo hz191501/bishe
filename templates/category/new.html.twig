@@ -1,0 +1,46 @@
+
+
+{# 新增分类页面：仅管理员可以创建新的帖子分类。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Nuova categoria
+{% endblock %}
+{% block body %}
+    <div class="editor-page">
+        <header class="editor-hero site-illustrated-hero">
+            <div>
+                <span class="eyebrow">AMMINISTRAZIONE</span>
+                <h1>Nuova categoria</h1>
+                <p>Organizza le richieste della comunità con un’etichetta chiara e coerente.</p>
+            </div>
+            <span class="editor-hero-mark">+</span>
+        </header>
+        <div class="editor-layout">
+            <section class="editor-card">
+                <div class="editor-card-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Informazioni principali</h2>
+                        <p>La nuova categoria sarà subito disponibile nel modulo delle richieste.</p>
+                    </div>
+                </div>
+                {{ include('category/_form.html.twig') }}
+            </section>
+            <aside class="editor-aside">
+                <div class="context-card tinted">
+                    <span class="context-icon">◇</span>
+                    <h2>Un buon nome è</h2>
+                    <ul>
+                        <li>breve e immediato;</li>
+                        <li>diverso dalle categorie esistenti;</li>
+                        <li>comprensibile per studenti italiani e cinesi.</li>
+                    </ul>
+                </div>
+                <div class="context-card">
+                    <span class="eyebrow text-primary">ESEMPIO</span>
+                    <p class="example-name">Vita universitaria</p>
+                    <small>Descrive chiaramente l’ambito senza essere troppo specifico.</small>
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

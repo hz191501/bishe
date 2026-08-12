@@ -1,0 +1,368 @@
+
+
+
+/* 页面布局样式：导航栏、主内容宽度、页脚和响应式页面骨架。 */
+
+.page-main {
+    /* 主内容区占满导航栏与页脚之间的剩余高度。 */
+    flex: 1;
+    width: 100%;
+    padding-top: 2rem;    
+    padding-bottom: 4rem; 
+}
+
+
+.main-nav {
+    /* 顶部导航栏的背景、内边距和阴影。 */
+    min-height: 74px;
+    background: rgba(16, 47, 79, .98);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .12);
+}
+
+
+.navbar-brand,
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: .65rem;     
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+
+.brand-mark {
+    /* BuddyBridge 标志图片的固定尺寸。 */
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    object-fit: contain;
+}
+
+
+.main-nav .nav-link {
+    color: rgba(255, 255, 255, .72);
+    font-weight: 500;
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-link:focus {
+    color: #fff;
+}
+
+
+.main-nav .nav-register {
+    border-color: #fff;
+    background: #fff;
+    color: var(--navy);
+    font-weight: 700;
+}
+
+
+.site-footer {
+    /* 全站页脚：深色背景以及与主内容的间距。 */
+    flex-shrink: 0;
+    margin-top: auto;
+    padding: 2.25rem 0 1rem;
+    background: #0d2944;
+    color: rgba(255, 255, 255, .68);
+}
+
+
+.footer-grid {
+    /* 页脚栏目在电脑端使用网格排列。 */
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2.5rem;
+}
+
+.footer-grid p {
+    max-width: 420px;
+    margin: .65rem 0 0;
+    line-height: 1.55;
+}
+
+.footer-grid h3 {
+    margin: 0 0 .55rem;
+    color: #fff;
+    font-size: .82rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+.footer-grid > div > a:not(.footer-brand) {
+    display: block;
+    margin: .28rem 0;
+    color: rgba(255, 255, 255, .7);
+    text-decoration: none;
+}
+
+.footer-grid > div > a:not(.footer-brand):hover {
+    color: #fff;
+}
+
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.6rem;
+    padding-top: .9rem;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+    font-size: .8rem;
+}
+
+
+.nav-search {
+    /* 桌面导航栏中的帖子搜索框。 */
+    position: relative;
+    width: min(260px, 22vw);
+    margin-right: 1rem;
+}
+
+.nav-search input {
+    width: 100%;
+    height: 42px;
+    margin: 0;
+    padding: 0 2.6rem 0 1rem;
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: 999px;
+    outline: 0;
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+}
+
+.nav-search input::placeholder {
+    color: rgba(255, 255, 255, .58);
+}
+
+.nav-search input:focus {
+    border-color: rgba(255, 255, 255, .55);
+    background: rgba(255, 255, 255, .12);
+    box-shadow: 0 0 0 3px rgba(40, 121, 168, .2);
+}
+
+.nav-search button {
+    position: absolute;
+    top: 50%;
+    right: .75rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, .75);
+    transform: translateY(-50%);
+}
+
+
+@media (max-width: 991px) {
+    .nav-search {
+        width: 100%;
+        margin: .75rem 0;
+    }
+}
+
+
+.nav-penpal-link,
+.nav-community-notification {
+    /* 顶部通知入口及未读数量角标。 */
+    position: relative;
+}
+
+.nav-notification-badge {
+    display: inline-flex;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    align-items: center;
+    justify-content: center;
+    margin-left: .25rem;
+    padding: 0 .28rem;
+    border-radius: 999px;
+    background: var(--coral);
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+
+.main-nav .primary-nav {
+    /* Home、Richieste、Amici di penna 等主要导航链接。 */
+    align-items: center;
+    gap: .2rem;
+}
+
+.main-nav .primary-nav .nav-link {
+    position: relative;
+    padding: .48rem .7rem; 
+    border: 1px solid transparent;
+    border-radius: 9px;
+    line-height: 1.15;
+    transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.main-nav .primary-nav .nav-link:hover {
+    border-color: rgba(255, 255, 255, .13);
+    background: rgba(255, 255, 255, .07);
+}
+
+.main-nav .primary-nav .nav-link.active {
+    border-color: rgba(255, 193, 167, .3);
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+    box-shadow: inset 0 -2px 0 #eb6b4f;
+}
+
+
+@media (min-width: 992px) {
+    .main-nav .primary-nav {
+        padding: .25rem;
+        border: 1px solid rgba(255, 255, 255, .1);
+        border-radius: 12px;
+        background: rgba(7, 34, 58, .2);
+    }
+}
+
+
+@media (max-width: 991px) {
+    .main-nav .primary-nav {
+        align-items: stretch;
+        gap: .35rem;
+        margin-top: .75rem;
+    }
+
+    .main-nav .primary-nav .nav-link {
+        padding: .7rem .8rem;
+        border-color: rgba(255, 255, 255, .09);
+        background: rgba(255, 255, 255, .035);
+    }
+}
+
+@media (max-width: 991px) {
+    .main-nav .navbar-collapse {
+        padding: 0.25rem 0 1rem;
+    }
+
+    .main-nav .primary-nav,
+    .main-nav .primary-nav .nav-item,
+    .main-nav .primary-nav .nav-link {
+        width: 100%;
+    }
+
+    .main-nav .primary-nav .nav-link {
+        display: flex;
+        min-height: 3.25rem;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+    }
+
+    .main-nav .nav-search {
+        margin: 0.75rem 0;
+    }
+
+    .main-nav .nav-account {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 0.65rem;
+        padding-top: 0.85rem;
+        border-top: 1px solid rgba(255, 255, 255, .12);
+    }
+
+    .main-nav .nav-account .nav-community-notification {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .main-nav .nav-account .nav-profile {
+        min-width: 0;
+        margin: 0;
+        padding: 0.25rem 0;
+        color: rgba(255, 255, 255, .86);
+        text-decoration: none;
+    }
+
+    .main-nav .nav-account .nav-profile > span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .main-nav .nav-account > .nav-link {
+        width: auto;
+        padding: 0.55rem 0.75rem;
+        border: 1px solid rgba(255, 255, 255, .16);
+        border-radius: 0.7rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 380px) {
+    .main-nav .nav-account {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .main-nav .nav-account > .nav-link {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}
+
+.nav-notification-icon {
+    /* 通知铃铛图标的大小和对齐方式。 */
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.main-nav .nav-account .nav-profile-name {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    margin: 0;
+    padding: .45rem .75rem;
+    border-radius: .7rem;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition: background .18s ease, color .18s ease;
+}
+
+.main-nav .nav-account .nav-profile-name:hover,
+.main-nav .nav-account .nav-profile-name:focus {
+    background: rgba(255, 255, 255, .09);
+    color: #fff;
+}
+
+.main-nav .nav-account .nav-logout {
+    margin-left: .15rem;
+    padding: .48rem .8rem;
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: .7rem;
+    color: rgba(255, 255, 255, .78);
+    line-height: 1;
+}
+
+.main-nav .nav-account .nav-logout:hover,
+.main-nav .nav-account .nav-logout:focus {
+    border-color: rgba(255, 255, 255, .42);
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+}
+
+@media (max-width: 991px) {
+    .main-nav .nav-account .nav-profile-name {
+        overflow: hidden;
+        padding: .6rem .75rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .main-nav .nav-account .nav-logout {
+        margin-left: 0;
+    }
+}

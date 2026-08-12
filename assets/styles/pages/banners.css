@@ -1,0 +1,515 @@
+﻿
+/* 页面横幅样式：统一各功能页面顶部插图、渐变和标题排版。 */
+
+.site-illustrated-hero {
+    /* 所有插图横幅共用的尺寸、圆角、文字颜色和背景定位。 */
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    max-width: none;
+    height: auto; 
+    min-height: 310px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    padding: 2.35rem 2.5rem; 
+    border-radius: 26px;
+    color: #fff;
+    text-align: left;
+    background-position: 64% center;
+    background-size: cover;
+    box-shadow: 0 18px 42px rgba(15, 47, 72, 0.12);
+}
+
+
+.site-illustrated-hero__content,
+.site-illustrated-hero > div:first-child {
+    /* 横幅中的第一块通常是标题和说明文字。 */
+    position: relative;
+    z-index: 1;
+    width: min(100%, 650px);
+    max-width: 650px;
+}
+
+.site-illustrated-hero .eyebrow {
+    display: block;
+    margin-bottom: 1.15rem;
+    color: #ff9a7d;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.site-illustrated-hero h1 {
+    max-width: 650px;
+    margin: 0;
+    color: #fff;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.35rem, 3.4vw, 3.35rem); 
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+}
+
+.site-illustrated-hero p {
+    max-width: 650px;
+    margin: 1.15rem 0 0;
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 1.08rem;
+    line-height: 1.55;
+}
+
+.site-illustrated-hero .illustrated-banner-content .btn {
+    margin-top: 1.4rem;
+}
+
+
+.site-illustrated-hero .admin-summary {
+    /* 当管理页面使用横幅时，统计数据放在横幅内部。 */
+    position: relative;
+    z-index: 1;
+    display: grid;
+    flex: 0 0 300px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    width: 300px;
+    margin: 0;
+}
+
+.site-illustrated-hero .admin-summary > div {
+    min-height: 112px;
+    padding: 1rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 18px;
+    background: rgba(15, 47, 72, 0.42);
+    backdrop-filter: blur(8px);
+    text-align: center;
+}
+
+.site-illustrated-hero .admin-summary strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: #fff;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.site-illustrated-hero .admin-summary span {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+@media (max-width: 991px) {
+    .site-illustrated-hero {
+        height: auto;
+        min-height: 290px;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2.25rem;
+        background-position: center;
+    }
+
+    .site-illustrated-hero .admin-summary {
+        flex: none;
+        width: min(100%, 420px);
+    }
+}
+
+@media (max-width: 575px) {
+    .site-illustrated-hero {
+        min-height: 270px;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        border-radius: 22px;
+    }
+
+    .site-illustrated-hero h1 {
+        font-size: clamp(2.35rem, 12vw, 3.25rem);
+    }
+
+    .site-illustrated-hero p {
+        font-size: 0.98rem;
+    }
+
+    .site-illustrated-hero .admin-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.illustrated-banner--travel.site-illustrated-hero {
+    /* “好友/旅程”页面使用的专属背景图。 */
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2.5rem;
+    text-align: left;
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.94) 0%, rgba(8, 38, 66, 0.78) 25%, rgba(8, 38, 66, 0.22) 48%, rgba(8, 38, 66, 0) 66%),
+        url("/images/illustrations/penpal-travel.webp");
+    background-position: center;
+    background-size: cover;
+}
+
+.illustrated-banner--travel.site-illustrated-hero > .eyebrow,
+.illustrated-banner--travel.site-illustrated-hero > h1,
+.illustrated-banner--travel.site-illustrated-hero > p {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 610px);
+    margin-right: auto;
+    margin-left: 0;
+    text-align: left;
+}
+
+@media (max-width: 767px) {
+    .illustrated-banner--travel.site-illustrated-hero {
+        padding-left: 1.5rem;
+        background-position: 62% center;
+    }
+
+    .illustrated-banner--travel.site-illustrated-hero > h1,
+    .illustrated-banner--travel.site-illustrated-hero > p {
+        width: min(100%, 520px);
+    }
+}
+
+.illustrated-banner--request.site-illustrated-hero {
+    /* 帖子列表页面使用的专属背景图。 */
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2.5rem;
+    text-align: left;
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.95) 0%, rgba(8, 38, 66, 0.82) 27%, rgba(8, 38, 66, 0.28) 49%, rgba(8, 38, 66, 0) 67%),
+        url("/images/illustrations/request-writing.webp");
+    background-position: center;
+    background-size: cover;
+}
+
+.illustrated-banner--request.site-illustrated-hero .illustrated-banner-content {
+    display: flex;
+    width: min(100%, 610px);
+    max-width: 610px;
+    align-items: flex-start;
+    flex-direction: column;
+    margin: 0 auto 0 0;
+    text-align: left;
+}
+
+.illustrated-banner--request.site-illustrated-hero .eyebrow,
+.illustrated-banner--request.site-illustrated-hero h1,
+.illustrated-banner--request.site-illustrated-hero p {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    text-align: left;
+}
+
+.illustrated-banner--request.site-illustrated-hero .btn {
+    align-self: flex-start;
+    margin-top: 1.35rem;
+}
+
+@media (max-width: 767px) {
+    .illustrated-banner--request.site-illustrated-hero {
+        padding-left: 1.5rem;
+        background-position: 62% center;
+    }
+
+    .illustrated-banner--request.site-illustrated-hero .illustrated-banner-content {
+        width: min(100%, 520px);
+    }
+}
+
+
+
+.request-create-hero.site-illustrated-hero {
+    /* 发布帖子页面顶部横幅。 */
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 340px;
+    gap: 1.1rem;
+    padding: 2rem 2.5rem;
+    text-align: left;
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.97) 0%, rgba(8, 38, 66, 0.88) 30%, rgba(8, 38, 66, 0.38) 50%, rgba(8, 38, 66, 0) 69%),
+        url("/images/illustrations/request-cafe.webp");
+    background-position: center;
+    background-size: cover;
+}
+
+.request-create-hero.site-illustrated-hero > div:first-child {
+    width: min(100%, 540px);
+    max-width: 540px;
+    margin: 0;
+}
+
+.request-create-hero.site-illustrated-hero h1,
+.request-create-hero.site-illustrated-hero p {
+    width: 100%;
+    max-width: 540px;
+    margin-right: 0;
+    margin-left: 0;
+    text-align: left;
+}
+
+.request-create-hero.site-illustrated-hero h1 {
+    font-size: clamp(2.35rem, 3.1vw, 3rem);
+    line-height: 1.06;
+}
+
+.request-create-hero.site-illustrated-hero p {
+    max-width: 500px;
+    margin-top: .85rem;
+}
+
+.request-create-hero.site-illustrated-hero .request-progress {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: auto;
+    max-width: min(100%, 540px);
+    flex: 0 0 auto;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(7, 34, 58, 0.48);
+    backdrop-filter: blur(7px);
+}
+
+
+.illustrated-profile {
+    /* 用户公开资料页面顶部的插图横幅。 */
+    position: relative;
+    min-height: 310px;
+    padding: 3rem;
+    overflow: hidden;
+    border-radius: 26px;
+    background:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.96) 0%, rgba(8, 38, 66, 0.84) 30%, rgba(8, 38, 66, 0.34) 51%, rgba(8, 38, 66, 0) 70%),
+        url("/images/illustrations/community-leisure.webp") center / cover;
+    text-align: left;
+}
+
+.illustrated-profile > * {
+    position: relative;
+    z-index: 1;
+}
+
+.illustrated-profile .profile-main {
+    flex: 0 1 430px;
+    max-width: 430px;
+}
+
+.illustrated-profile .profile-main h1,
+.illustrated-profile .profile-main p {
+    text-align: left;
+}
+
+
+.editor-hero.site-illustrated-hero {
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.96) 0%, rgba(8, 38, 66, 0.82) 31%, rgba(8, 38, 66, 0.3) 52%, rgba(8, 38, 66, 0) 70%),
+        url("/images/illustrations/category-music.webp");
+    background-position: center;
+    background-size: cover;
+}
+
+.editor-hero.site-illustrated-hero > div:first-child {
+    max-width: 570px;
+}
+
+.category-detail-hero.site-illustrated-hero {
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.96) 0%, rgba(8, 38, 66, 0.82) 31%, rgba(8, 38, 66, 0.3) 52%, rgba(8, 38, 66, 0) 70%),
+        url("/images/illustrations/category-dinner.webp");
+    background-position: center;
+    background-size: cover;
+}
+
+.category-detail-hero.site-illustrated-hero > div:first-child {
+    max-width: 590px;
+}
+
+
+.admin-users-header.site-illustrated-hero {
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.96) 0%, rgba(8, 38, 66, 0.8) 31%, rgba(8, 38, 66, 0.25) 54%, rgba(8, 38, 66, 0) 72%),
+        url("/images/illustrations/admin-community.webp");
+    background-position: center;
+    background-size: cover;
+}
+
+.admin-users-header.site-illustrated-hero > div:first-child {
+    max-width: 580px;
+}
+
+
+.auth-visual {
+    /* 登录和注册页面左侧的图片与介绍区域。 */
+    align-items: flex-start;
+    text-align: left;
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.94) 0%, rgba(8, 38, 66, 0.72) 48%, rgba(8, 38, 66, 0.16) 78%),
+        url("/images/illustrations/auth-welcome.webp");
+    background-position: center;
+    background-size: cover;
+}
+
+.auth-visual--register {
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.94) 0%, rgba(8, 38, 66, 0.72) 48%, rgba(8, 38, 66, 0.16) 78%),
+        url("/images/illustrations/registration-welcome.webp");
+}
+
+.auth-visual > h1,
+.auth-visual > p,
+.auth-visual > .auth-points {
+    width: min(100%, 440px);
+    max-width: 440px;
+    text-align: left;
+}
+
+@media (max-width: 991px) {
+    .request-create-hero.site-illustrated-hero,
+    .illustrated-profile {
+        min-height: 290px;
+        padding: 2.25rem;
+    }
+
+    .request-create-hero.site-illustrated-hero .request-progress {
+        flex-wrap: wrap;
+        border-radius: 18px;
+    }
+
+    .illustrated-profile {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 767px) {
+    .request-create-hero.site-illustrated-hero,
+    .illustrated-profile {
+        min-height: 270px;
+        padding: 1.5rem;
+        background-position: 62% center;
+    }
+
+    .request-create-hero.site-illustrated-hero .request-progress i {
+        display: none;
+    }
+
+    .request-create-hero.site-illustrated-hero .request-progress {
+        gap: 0.75rem 1rem;
+    }
+
+    .illustrated-profile .profile-main {
+        flex-basis: calc(100% - 80px);
+    }
+}
+
+
+.category-overview-hero.site-illustrated-hero {
+    /* 分类总览页面顶部横幅。 */
+    position: relative;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.35rem 2.5rem;
+    text-align: left;
+    background-image:
+        linear-gradient(90deg, rgba(8, 38, 66, 0.98) 0%, rgba(8, 38, 66, 0.9) 31%, rgba(8, 38, 66, 0.34) 51%, rgba(8, 38, 66, 0) 69%),
+        url("/images/illustrations/category-overview.png");
+    background-position: center;
+    background-size: cover;
+}
+
+
+.category-overview-hero.site-illustrated-hero > div:first-child {
+    display: grid;
+    gap: 0.9rem;
+    width: min(100%, 640px);
+    max-width: 640px;
+}
+
+.category-overview-hero.site-illustrated-hero h1,
+.category-overview-hero.site-illustrated-hero p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.category-overview-hero.site-illustrated-hero .eyebrow,
+.category-overview-hero.site-illustrated-hero .eyebrow.text-primary {
+    color: #f5a188 !important;
+}
+
+.category-overview-hero.site-illustrated-hero h1,
+.category-overview-hero.site-illustrated-hero p {
+    width: 100%;
+    max-width: 640px;
+    margin-right: 0;
+    margin-left: 0;
+    color: #fff;
+    text-align: left;
+}
+
+.category-overview-hero.site-illustrated-hero > .btn {
+    align-self: flex-start;
+    margin-top: 1.15rem;
+    border-color: var(--blue);
+    background: var(--blue);
+    color: #fff;
+}
+
+.category-overview-hero.site-illustrated-hero > .btn:hover,
+.category-overview-hero.site-illustrated-hero > .btn:focus {
+    border-color: #174f78;
+    background: #174f78;
+}
+
+@media (max-width: 767px) {
+    .category-overview-hero.site-illustrated-hero {
+        padding: 1.5rem;
+        background-position: 62% center;
+    }
+}
+
+
+.profile-match-summary { display: grid; gap: .55rem; width: min(100%, 430px); margin-top: 1rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.18); }
+.profile-match-row { display: grid; grid-template-columns: 125px minmax(0,1fr); align-items: start; gap: .65rem; }
+.profile-match-row > span { padding-top: .28rem; color: rgba(255,255,255,.7); font-size: .76rem; line-height: 1.25; text-transform: uppercase; letter-spacing: .05em; }
+.profile-match-row > div { display: flex; flex-wrap: wrap; gap: .35rem; min-width: 0; }
+.profile-match-row strong,.profile-match-row em { display: inline-flex; max-width: 100%; padding: .25rem .55rem; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; background: rgba(255,255,255,.12); color: #fff; font-size: .78rem; font-style: normal; line-height: 1.25; overflow-wrap: anywhere; backdrop-filter: blur(5px); }
+.profile-match-row em { color: rgba(255,255,255,.65); }
+@media (max-width: 767px) { .profile-match-row { grid-template-columns: 1fr; gap: .3rem; } }
+
+.profile-match-summary { display: grid; gap: .7rem; width: min(100%, 470px); margin-top: 1.15rem; padding-top: 1rem; }
+.profile-match-summary p { display: flex; align-items: baseline; flex-wrap: wrap; gap: .35rem; margin: 0; color: #fff; line-height: 1.45; text-align: left; }
+.profile-match-summary p span { flex: 0 0 auto; color: rgba(255,255,255,.72); font-size: .85rem; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.profile-match-summary p strong { display: inline; padding: 0; border: 0; border-radius: 0; background: transparent; color: #fff; font-size: .92rem; font-weight: 700; line-height: inherit; backdrop-filter: none; }
+
+
+.profile-edit-action {
+    margin-top: 1.15rem;
+}
+
+.profile-edit-action .btn {
+    min-width: 160px;
+}
+@media (max-width: 575px) { .profile-match-summary { gap: .65rem; } .profile-match-summary p { display: block; } .profile-match-summary p span { margin-right: .3rem; } }
+
+

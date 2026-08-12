@@ -1,0 +1,33 @@
+
+
+{# 回答公共表单：新增和修改回答页面共同使用。 #}
+{{ form_start(form, {attr: {class: 'polished-form'}}) }}
+{{ form_errors(form) }}
+
+<div class="emoji-enabled-field">
+    {{ form_label(form.content) }}
+    {{ form_widget(form.content) }}
+    {{ include('shared/_emoji_picker.html.twig') }}
+    {{ form_help(form.content) }}
+    {{ form_errors(form.content) }}
+</div>
+
+<div class="field-meta">
+    <span>Rileggi il testo prima di pubblicare.</span>
+    <span>Massimo 5000 caratteri</span>
+</div>
+
+<div class="form-actions">
+    <a
+        class="btn btn-outline-secondary"
+        href="{{ path('app_bridge_task_show', {id: task_response.task ? task_response.task.id : bridge_task.id}) }}"
+    >
+        Annulla
+    </a>
+    <button class="btn btn-primary" type="submit">
+        {{ button_label|default('Pubblica') }}
+        <span aria-hidden="true">→</span>
+    </button>
+</div>
+
+{{ form_end(form) }}

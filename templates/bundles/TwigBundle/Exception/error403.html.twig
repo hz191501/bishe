@@ -1,0 +1,14 @@
+
+
+{# 403 页面：用户没有权限访问当前内容时显示。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Accesso non consentito
+{% endblock %}
+{% block body %}
+    <div class="error-page">
+        <span>403</span>
+        <h1>Accesso non consentito</h1>
+        <p>Non hai i permessi necessari per questa operazione.</p>
+        <a class="btn btn-primary" href="{{ path('app_home') }}">Torna alla home</a>
+    </div>
+{% endblock %}

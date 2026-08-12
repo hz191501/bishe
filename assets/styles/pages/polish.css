@@ -1,0 +1,668 @@
+
+
+/* 最终细节与响应式样式：统一间距，并修正平板和手机端排版。 */
+
+.page-main {
+    /* 统一所有页面主内容的上下留白。 */
+    padding-top: clamp(1.25rem, 2.5vw, 2rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.page-main h1,
+.page-main h2,
+.page-main h3,
+.page-main p {
+    overflow-wrap: anywhere;
+}
+
+.page-main p {
+    line-height: 1.65;
+}
+
+
+.compact-page-header,
+.section-heading {
+    /* 首页和列表页的大标题与说明文字排列。 */
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.compact-page-header {
+    margin-bottom: 1.5rem;
+    padding: 1.75rem 2rem;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: rgba(255, 253, 249, 0.88);
+    box-shadow: 0 10px 30px rgba(16, 47, 79, 0.055);
+}
+
+.compact-page-header > div,
+.section-heading > div {
+    min-width: 0;
+}
+
+.compact-page-header h1,
+.section-heading h1,
+.section-heading h2 {
+    margin: 0;
+    color: var(--navy);
+    font-family: "Fraunces", Georgia, serif;
+    line-height: 1.08;
+}
+
+.compact-page-header h1 {
+    font-size: clamp(2.25rem, 4vw, 3.4rem);
+}
+
+.section-heading h2 {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+}
+
+.compact-page-header p,
+.section-heading p {
+    max-width: 680px;
+    margin: 0.5rem 0 0;
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+.section-heading {
+    margin-bottom: 1.25rem;
+}
+
+
+.page-card,
+.editor-card,
+.request-form-panel,
+.admin-users-panel,
+.notification-panel {
+    /* 通知列表以及其他主要内容卡片的统一外观。 */
+    overflow: hidden;
+}
+
+.page-card,
+.editor-card,
+.request-form-panel {
+    padding: clamp(1.35rem, 2.5vw, 2.2rem);
+}
+
+.page-card h1,
+.page-card h2,
+.page-card h3,
+.editor-card h1,
+.editor-card h2,
+.editor-card h3 {
+    line-height: 1.18;
+}
+
+.page-card p:last-child,
+.editor-card p:last-child,
+.context-card p:last-child,
+.empty-state p:last-child {
+    margin-bottom: 0;
+}
+
+
+.empty-state {
+    /* 没有帖子、好友或通知时的提示块。 */
+    min-height: 0;
+    padding: clamp(2rem, 4vw, 3rem) clamp(1.25rem, 3vw, 2rem);
+}
+
+.empty-state h2,
+.empty-state h3 {
+    margin: 0 0 0.55rem;
+    line-height: 1.2;
+}
+
+.empty-state p {
+    max-width: 620px;
+    margin: 0 auto 1.15rem;
+    line-height: 1.6;
+}
+
+
+.editor-layout {
+    /* 调整编辑页面主栏与侧栏的宽度比例。 */
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.editor-card-heading {
+    align-items: flex-start;
+}
+
+.editor-card form > div + div,
+.request-form-panel form > div + div,
+.auth-panel form > div + div {
+    /* 登录或注册表单相邻字段之间的距离。 */
+    margin-top: 1rem;
+}
+
+.editor-card label,
+.request-form-panel label,
+.auth-panel label {
+    display: inline-block;
+    margin-bottom: 0.45rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.form-control,
+.form-select,
+.editor-card input,
+.editor-card textarea,
+.editor-card select,
+.request-form-panel input,
+.request-form-panel textarea,
+.request-form-panel select {
+    width: 100%;
+    line-height: 1.45;
+}
+
+.editor-card textarea,
+.request-form-panel textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.editor-aside,
+.admin-category-grid,
+.task-grid,
+.answer-list,
+.penpal-grid {
+    gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+
+.auth-shell {
+    min-height: 0;
+}
+
+.auth-visual,
+.auth-panel {
+    min-height: 480px;
+}
+
+.auth-visual,
+.auth-panel {
+    padding: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+.auth-panel form {
+    width: 100%;
+}
+
+
+.admin-category-card,
+.admin-user-card,
+.notification-item,
+.task-card,
+.answer-card {
+    /* 帖子回答卡片的最终间距和边框修正。 */
+    text-align: left;
+}
+
+.admin-category-card,
+.admin-user-card {
+    min-width: 0;
+}
+
+.admin-category-card h2,
+.task-card h2 {
+    line-height: 1.22;
+}
+
+.admin-user-identity,
+.admin-user-stats,
+.admin-user-actions,
+.answer-header,
+.answer-toolbar {
+    min-width: 0;
+}
+
+.notification-copy span {
+    line-height: 1.5;
+}
+
+
+.question-card,
+.answer-card {
+    margin-bottom: 1.25rem;
+}
+
+.answer-header,
+.answer-content,
+.answer-toolbar,
+.answer-card .response-comments {
+    padding-right: clamp(1.15rem, 2.5vw, 2rem);
+    padding-left: clamp(1.15rem, 2.5vw, 2rem);
+}
+
+.answer-content {
+    line-height: 1.72;
+}
+
+.answer-toolbar {
+    row-gap: 0.75rem;
+}
+
+.response-comment {
+    gap: 0.9rem;
+}
+
+
+.profile-activity-section + .profile-activity-section {
+    margin-top: clamp(2.25rem, 4vw, 3rem);
+}
+
+
+.chat-workspace {
+    /* 聊天页主体的最小高度。 */
+    height: clamp(480px, 62vh, 620px);
+}
+
+.message-list {
+    scrollbar-gutter: stable;
+}
+
+
+.legal-page {
+    /* 隐私和使用条件页面的阅读宽度。 */
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.legal-page h1 {
+    margin: 0.4rem 0 0.35rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    line-height: 1.08;
+}
+
+.legal-page h2 {
+    margin: 2rem 0 0.55rem;
+    color: var(--navy);
+    font-size: 1.3rem;
+}
+
+.legal-page p {
+    margin-bottom: 0.9rem;
+}
+
+
+.error-page {
+    max-width: 720px;
+    min-height: 360px;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4rem);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--paper);
+    text-align: center;
+    box-shadow: 0 16px 45px rgba(16, 47, 79, 0.08);
+}
+
+
+.site-footer {
+    /* 页脚最后的间距与响应式修正。 */
+    padding-top: 3rem;
+}
+
+.footer-grid {
+    gap: clamp(2rem, 5vw, 4rem);
+}
+
+@media (max-width: 991px) {
+    .compact-page-header,
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .compact-page-header .btn,
+    .section-heading .btn {
+        align-self: flex-start;
+    }
+
+    .editor-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-visual,
+    .auth-panel {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 767px) {
+    .compact-page-header {
+        padding: 1.35rem;
+        border-radius: 18px;
+    }
+
+    .page-card,
+    .editor-card,
+    .request-form-panel {
+        padding: 1.25rem;
+    }
+
+    .admin-user-card,
+    .notification-item {
+        gap: 0.85rem;
+    }
+
+    .chat-workspace {
+        height: min(620px, calc(100vh - 150px));
+        min-height: 480px;
+    }
+
+    .site-footer {
+        padding-top: 2.5rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .compact-page-header h1 {
+        font-size: 2.15rem;
+    }
+
+    .section-heading h2 {
+        font-size: 2rem;
+    }
+
+    .btn,
+    button,
+    input,
+    select,
+    textarea {
+        max-width: 100%;
+    }
+
+    .answer-toolbar,
+    .admin-user-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .answer-toolbar .btn,
+    .admin-user-actions .btn,
+    .admin-user-actions form,
+    .admin-user-actions form button {
+        width: 100%;
+    }
+}
+
+.friendship-grid {
+    /* 已接受好友列表：电脑两列，手机一列。 */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.friendship-grid .connection-card {
+    min-height: 124px;
+    padding: 1.4rem 1.5rem;
+    border-radius: 22px;
+    box-shadow: 0 12px 32px rgba(16, 47, 79, 0.07);
+}
+
+.friendship-grid .profile-mini {
+    min-width: 0;
+    flex: 1 1 auto;
+    gap: 1rem;
+}
+
+.friendship-grid .profile-avatar.small {
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+    border-radius: 18px;
+    font-size: 1.35rem;
+}
+
+.friendship-grid .profile-mini > span:last-child {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.friendship-grid .profile-mini strong {
+    color: var(--navy);
+    font-size: 1.08rem;
+    line-height: 1.3;
+}
+
+.friendship-grid .profile-mini small {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+.friendship-chat-button {
+    min-height: 44px;
+    flex: 0 0 auto;
+    padding: 0.65rem 1.15rem;
+}
+
+.friendship-section-heading {
+    align-items: end;
+}
+
+.friend-search-form {
+    /* 好友搜索表单的最大宽度。 */
+    width: min(100%, 520px);
+}
+
+.friend-search-form label {
+    display: block;
+    margin-bottom: .4rem;
+    color: var(--navy);
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.friend-search-form > div {
+    /* 搜索输入框和按钮在同一行显示。 */
+    display: flex;
+    gap: .55rem;
+}
+
+.friend-search-form .form-control {
+    min-width: 0;
+}
+
+.friendship-grid + .pagination-wrap {
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 991px) {
+    .friendship-section-heading {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .friend-search-form {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .friendship-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 575px) {
+    .friendship-grid .connection-card {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 1.2rem;
+    }
+
+    .friendship-chat-button {
+        width: 100%;
+    }
+
+    .friend-search-form > div {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .friend-search-form .form-control {
+        width: 100%;
+    }
+
+    .friend-search-form .btn-outline-secondary {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+}
+
+
+.page-card,
+.editor-card,
+.request-form-panel,
+.context-card,
+.admin-category-card,
+.admin-user-card,
+.notification-panel,
+.notification-item {
+    /* 单条通知的卡片布局。 */
+    border-color: rgba(31, 95, 139, .16);
+    background-color: var(--paper);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 10px 28px rgba(16, 47, 79, .07);
+}
+
+.page-card,
+.editor-card,
+.request-form-panel,
+.admin-category-card,
+.admin-user-card {
+    background-image: linear-gradient(180deg, rgba(40, 121, 168, .045) 0, rgba(40, 121, 168, .045) 4px, transparent 4px);
+}
+
+.context-card,
+.notification-item {
+    background-image: linear-gradient(145deg, #fffdf9, #f5f8f7);
+}
+
+.task-card,
+.answer-card,
+.connection-card,
+.suggestion-card,
+.participated-task-card,
+.notebook-card {
+    /* 好友共享笔记卡片。 */
+    border-color: rgba(31, 95, 139, .17);
+    box-shadow: inset 0 1px 0 #fff, 0 9px 25px rgba(16, 47, 79, .065);
+}
+
+.task-card:hover,
+.connection-card:hover,
+.suggestion-card:hover,
+.participated-task-card:hover {
+    border-color: rgba(31, 95, 139, .3);
+    box-shadow: 0 14px 32px rgba(16, 47, 79, .11);
+}
+
+
+@media (max-width: 767px) {
+    .site-footer {
+        padding: 1.5rem 0 .85rem;
+    }
+
+    .site-footer .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.15rem .9rem;
+    }
+
+    .site-footer .footer-intro {
+        grid-column: 1 / -1;
+    }
+
+    .site-footer .footer-brand {
+        gap: .55rem;
+        font-size: 1.05rem;
+    }
+
+    .site-footer .footer-brand .brand-mark {
+        width: 38px;
+        height: 38px;
+    }
+
+    .site-footer .footer-grid p {
+        max-width: 34rem;
+        margin-top: .45rem;
+        font-size: .88rem;
+        line-height: 1.45;
+    }
+
+    .site-footer .footer-grid h3 {
+        margin-bottom: .35rem;
+        font-size: .7rem;
+    }
+
+    .site-footer .footer-grid > div > a:not(.footer-brand) {
+        margin: .14rem 0;
+        font-size: .88rem;
+        line-height: 1.45;
+    }
+
+    .site-footer .footer-bottom {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: .3rem .8rem;
+        margin-top: 1rem;
+        padding-top: .7rem;
+        font-size: .72rem;
+    }
+}
+
+@media (max-width: 390px) {
+    .site-footer .footer-bottom {
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 768px) {
+    .site-footer {
+        padding: 1.45rem 0 .7rem;
+    }
+
+    .site-footer .footer-grid {
+        align-items: start;
+        gap: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .site-footer .footer-brand .brand-mark {
+        width: 36px;
+        height: 36px;
+    }
+
+    .site-footer .footer-grid p {
+        margin-top: .4rem;
+        font-size: .88rem;
+        line-height: 1.4;
+    }
+
+    .site-footer .footer-grid h3 {
+        margin-bottom: .35rem;
+        font-size: .72rem;
+    }
+
+    .site-footer .footer-grid > div > a:not(.footer-brand) {
+        margin: .12rem 0;
+        font-size: .88rem;
+        line-height: 1.4;
+    }
+
+    .site-footer .footer-bottom {
+        margin-top: .9rem;
+        padding-top: .65rem;
+        font-size: .72rem;
+    }
+}

@@ -1,0 +1,69 @@
+
+
+{# 分类详情页面：显示分类名称、帖子数量和该分类的管理入口。 #}
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ category.name }}
+{% endblock %}
+{% block body %}
+    <div class="editor-page">
+        <header class="category-detail-hero illustrated-admin-banner site-illustrated-hero">
+            <div>
+                <span class="category-letter large">
+                    {{ category.name|slice(0,1)|upper }}
+                </span>
+                <div>
+                    <span class="eyebrow">CATEGORIA</span>
+                    <h1>
+                        {{ category.name }}
+                    </h1>
+                    <p>
+                        {{ category.bridgeTasks|length }}
+                        {{ category.bridgeTasks|length == 1 ? 'richiesta associata' : 'richieste associate' }}
+                    </p>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a class="btn btn-light" href="{{ path('app_bridge_task_index', {category:category.id}) }}">Vedi richieste</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="btn btn-outline-light" href="{{ path('app_category_edit', {id:category.id}) }}">Modifica</a>
+                {% endif %}
+            </div>
+        </header>
+        <section class="mt-4">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow text-primary">CONTENUTI</span>
+                    <h2>Richieste recenti</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                {% for task in category.bridgeTasks|slice(0,6) %}
+                    <div class="col-md-6 col-lg-4">
+                        <article class="task-card p-4">
+                            <span class="status-dot {{ task.status == 'resolved' ? 'resolved' : '' }}">
+                                {{ task.status == 'resolved' ? 'Risolta' : 'Aperta' }}
+                            </span>
+                            <h3 class="h5 mt-3">
+                                {{ task.title }}
+                            </h3>
+                            <p class="meta">
+                                {{ task.description|slice(0,110) }}
+                                {% if task.description|length > 110 %}…
+                                {% endif %}
+                            </p>
+                            <a class="text-link" href="{{ path('app_bridge_task_show', {id:task.id}) }}">Apri richiesta →</a>
+                        </article>
+                    </div>
+                {% else %}
+                        <div class="col-12">
+                            <div class="empty-state">
+                                <h3>Nessuna richiesta in questa categoria</h3>
+                                <p>I nuovi contenuti appariranno qui.</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    {% endblock %}

@@ -1,0 +1,11 @@
+
+
+{# 删除回答表单：通过 POST、作者权限和 CSRF 令牌保护操作。 #}
+<form
+    method="post"
+    action="{{ path('app_task_response_delete', {id: task_response.id}) }}"
+    onsubmit="return confirm('Vuoi eliminare questa risposta?');"
+>
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task_response.id) }}">
+    <button class="btn btn-sm btn-outline-danger">Elimina</button>
+</form>

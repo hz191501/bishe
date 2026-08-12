@@ -1,0 +1,34 @@
+
+
+{# 使用条件页面：说明用户在社区中应遵守的基本规则。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Condizioni di utilizzo
+{% endblock %}
+{% block body %}
+    <article class="legal-page page-card">
+        <span class="eyebrow text-primary">INFORMAZIONI</span>
+        <h1>Condizioni di utilizzo</h1>
+        <p class="meta">Ultimo aggiornamento: {{ 'now'|date('d/m/Y') }}
+        </p>
+        <h2>Uso della piattaforma</h2>
+        <p>
+            BuddyBridge è uno spazio di scambio tra studenti italiani e cinesi. Ogni membro è responsabile dei
+            contenuti che pubblica e deve comunicare in modo rispettoso.
+        </p>
+        <h2>Contenuti non consentiti</h2>
+        <p>
+            Non sono ammessi insulti, discriminazioni, molestie, spam, contenuti illegali o la pubblicazione di dati
+            personali altrui senza consenso.
+        </p>
+        <h2>Account e sicurezza</h2>
+        <p>
+            Conserva con cura le credenziali del tuo account. Non condividere password, documenti, coordinate
+            bancarie o altre informazioni riservate nelle richieste e nei messaggi.
+        </p>
+        <h2>Scambi tra utenti</h2>
+        <p>
+            Le risposte e i messaggi rappresentano opinioni personali degli utenti. Verifica sempre le informazioni
+            importanti prima di utilizzarle.
+        </p>
+    </article>
+{% endblock %}

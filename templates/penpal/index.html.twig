@@ -1,0 +1,274 @@
+﻿
+
+{# 好友首页：显示好友搜索与分页、申请列表以及推荐用户。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Amici di penna | BuddyBridge
+{% endblock %}
+{% block body %}
+    
+    <header class="page-heading illustrated-banner illustrated-banner--travel site-illustrated-hero">
+        <span class="eyebrow text-primary">LA TUA RETE</span>
+        <h1>Amici di penna</h1>
+        <p>Continua le conversazioni nate dagli scambi nella comunità.</p>
+    </header>
+        {% if received_requests %}
+            
+        <section class="mb-5">
+                <div class="section-heading">
+                    <div>
+                        <h2>Richieste ricevute</h2>
+                        <p>Decidi con chi vuoi iniziare uno scambio.</p>
+                    </div>
+                    <span class="soft-badge">{{ received_pagination.totalItems }}</span>
+                </div>
+                <div class="connection-grid">
+                    {% for connection in received_requests %}
+                        <article class="connection-card">
+                            <a class="profile-mini" href="{{ path('app_profile_show', {id: connection.requester.id}) }}">
+                                <span class="profile-avatar small">
+                                    {{ connection.requester.username|slice(0,1)|upper }}
+                                </span>
+                                <span>
+                                    <strong>
+                                        {{ connection.requester.username }}
+                                    </strong>
+                                    <small>
+                                        {{ connection.requester.city ?: 'Località non indicata' }}
+                                    </small>
+                                </span>
+                            </a>
+                            <div class="connection-actions">
+                                <form method="post" action="{{ path('app_penpal_accept', {id: connection.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('penpal_accept_' ~ connection.id) }}">
+                                    <button class="btn btn-primary btn-sm">Accetta</button>
+                                </form>
+                                <form method="post" action="{{ path('app_penpal_reject', {id: connection.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('penpal_reject_' ~ connection.id) }}">
+                                    <button class="btn btn-outline-secondary btn-sm">Rifiuta</button>
+                                </form>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+                {% include 'shared/_pagination.html.twig' with {
+                    pagination: received_pagination,
+                    route_name: 'app_penpal_index',
+                    page_param: 'received_page'
+                } only %}
+            </section>
+        {% endif %}
+
+        
+        <section class="mb-5">
+            <div class="section-heading friendship-section-heading">
+                <div>
+                    <h2>Le tue amicizie</h2>
+                    <p>
+                        <strong>{{ friendship_pagination.totalItems }}</strong>
+                        {{ friendship_pagination.totalItems == 1 ? 'amicizia' : 'amicizie' }}.
+                        Le nuove lettere e le conversazioni recenti vengono mostrate per prime.
+                    </p>
+                </div>
+                {# 使用 GET 提交搜索词，使搜索条件可以保留在网址和分页链接中。 #}
+                <form class="friend-search-form" method="get">
+                    <label for="friend_q">Cerca tra i tuoi amici</label>
+                    <div>
+                        <input
+                            id="friend_q"
+                            class="form-control"
+                            type="search"
+                            name="friend_q"
+                            value="{{ friend_query }}"
+                            placeholder="Nome, città o nazionalità"
+                        >
+                        <button class="btn btn-primary" type="submit">Cerca</button>
+                        {% if friend_query %}
+                            <a class="btn btn-outline-secondary" href="{{ path('app_penpal_index') }}">Azzera</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            <div class="connection-grid friendship-grid">
+                {% for connection in accepted_connections %}
+                    {% set friend = connection.requester == app.user ? connection.receiver : connection.requester %}
+                    {% set unread_count = connection.unreadMessageCountFor(app.user) %}
+                    <article class="connection-card {{ unread_count > 0 ? 'has-unread-letters' : '' }}">
+                        <a class="profile-mini" href="{{ path('app_profile_show', {id: friend.id}) }}">
+                            <span class="profile-avatar small">
+                                {{ friend.username|slice(0,1)|upper }}
+                            </span>
+                            <span>
+                                <strong>
+                                    {{ friend.username }}
+                                </strong>
+                                {% if unread_count > 0 %}
+                                    <span class="friend-unread-badge">
+                                        {{ unread_count }} {{ unread_count == 1 ? 'nuova lettera' : 'nuove lettere' }} da {{ friend.username }}
+                                    </span>
+                                {% endif %}
+                                <small>
+                                    {{ friend.city ?: 'Località non indicata' }}
+                                    {% if friend.nationality %} · {{ friend.nationality }}
+                                    {% endif %}
+                                </small>
+                            </span>
+                        </a>
+                        <div class="friendship-archive-preview">
+                            <span>
+                                <strong>{{ connection.messages|length }}</strong>
+                                lettere
+                            </span>
+                            <span>
+                                dal
+                                {{ connection.acceptedAt ? connection.acceptedAt|date('d/m/Y') : connection.createdAt|date('d/m/Y') }}
+                            </span>
+                            {% if connection.sourceTask %}
+                                <small>Conosciuti tramite un BridgeTask</small>
+                            {% endif %}
+                        </div>
+                        <a
+                            class="btn btn-primary friendship-chat-button"
+                            href="{{ path('app_penpal_chat', {
+                                id: connection.id,
+                                return_page: friendship_pagination.currentPage,
+                                return_friend_q: friend_query,
+                                return_received_page: received_pagination.currentPage,
+                                return_sent_page: sent_pagination.currentPage
+                            }) }}"
+                        >
+                            {{ unread_count > 0 ? 'Leggi ' ~ unread_count ~ (unread_count == 1 ? ' nuova lettera' : ' nuove lettere') : 'Apri le lettere' }}
+                        </a>
+                    </article>
+                {% else %}
+                        <div class="empty-state">
+                            <h3>La tua rete è ancora vuota</h3>
+                            <p>Visita il profilo di una persona che ti ha aiutato e invia una richiesta di amicizia.</p>
+                            <a class="btn btn-primary" href="{{ path('app_bridge_task_index') }}">Esplora le richieste</a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% include 'shared/_pagination.html.twig' with {
+                    pagination: friendship_pagination,
+                    route_name: 'app_penpal_index'
+                } only %}
+            </section>
+
+            {% if sent_requests %}
+                
+                <section class="sent-requests-section">
+                    <div class="section-heading compact-heading">
+                        <div>
+                            <span class="eyebrow text-primary">IN ATTESA</span>
+                            <h2>Richieste inviate</h2>
+                            <p>Le persone che non hanno ancora risposto alla tua richiesta.</p>
+                        </div>
+                        <span class="soft-badge">{{ sent_pagination.totalItems }}</span>
+                    </div>
+                    <div class="connection-grid">
+                        {% for connection in sent_requests %}
+                            <article class="connection-card">
+                                <a class="profile-mini" href="{{ path('app_profile_show', {id: connection.receiver.id}) }}">
+                                    <span class="profile-avatar small">
+                                        {{ connection.receiver.username|slice(0,1)|upper }}
+                                    </span>
+                                    <span>
+                                        <strong>
+                                            {{ connection.receiver.username }}
+                                        </strong>
+                                        <small>In attesa di risposta</small>
+                                    </span>
+                                </a>
+                                <span class="soft-badge">In attesa</span>
+                            </article>
+                        {% endfor %}
+                    </div>
+                    {% include 'shared/_pagination.html.twig' with {
+                        pagination: sent_pagination,
+                        route_name: 'app_penpal_index',
+                        page_param: 'sent_page'
+                    } only %}
+                </section>
+            {% endif %}
+
+    
+    
+    <section class="suggestions-section mb-5">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow text-primary">NUOVI INCONTRI</span>
+                <h2>Persone consigliate per te</h2>
+                <p>Compatibilità calcolata da lingue, interessi e contesto culturale.</p>
+                <small class="suggestion-rule">Completa il profilo per rendere i suggerimenti più precisi.</small>
+            </div>
+            <span class="soft-badge">{{ suggested_matches|length }} suggerimenti</span>
+        </div>
+
+        <div class="suggestion-grid">
+            {% for match in suggested_matches %}
+                {% set suggested_user = match.user %}
+                <article class="suggestion-card">
+                    <div class="suggestion-score">{{ match.score }}% compatibile</div>
+                    <a class="suggestion-profile" href="{{ path('app_profile_show', {id: suggested_user.id}) }}">
+                        <span class="profile-avatar">{{ suggested_user.username|slice(0, 1)|upper }}</span>
+                        <span class="suggestion-identity">
+                            <strong>{{ suggested_user.username }}</strong>
+                            <small>{{ suggested_user.city ?: 'Località non indicata' }}</small>
+                        </span>
+                    </a>
+
+                    <div class="suggestion-details">
+                        <div class="suggestion-meta">
+                            <span class="soft-badge">{{ suggested_user.nationality ?: 'Nazionalità non indicata' }}</span>
+                            {% if suggested_user.genderLabel and suggested_user.gender != 'prefer_not_to_say' %}
+                                <span class="soft-badge suggestion-gender">{{ suggested_user.genderLabel }}</span>
+                            {% endif %}
+                            {% if suggested_user.age is not null %}
+                                <span class="soft-badge suggestion-age">{{ suggested_user.age }} anni</span>
+                            {% endif %}
+                        </div>
+                        <div class="suggestion-reasons">
+                        {% for reason in match.reasons|slice(0, 2) %}
+                            <span class="match-reason">{{ reason }}</span>
+                        {% endfor %}
+                        </div>
+                    </div>
+
+                    {# 始终显示对方填写的兴趣；共同兴趣仍由上方匹配原因体现。 #}
+                    <div class="suggestion-interests">
+                        <small>Interessi:</small>
+                        {% if suggested_user.interestList is not empty %}
+                            <div class="match-tags">
+                                {% for interest in suggested_user.interestList|slice(0, 3) %}
+                                    <span>{{ interest }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <span class="suggestion-empty-value">Non indicati</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="suggestion-actions">
+                        <a class="btn btn-outline-primary btn-sm" href="{{ path('app_profile_show', {id: suggested_user.id}) }}">Vedi profilo</a>
+                        <form method="post" action="{{ path('app_penpal_request', {id: suggested_user.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('penpal_request_' ~ suggested_user.id) }}">
+                            {# 发送后留在当前好友页面，不再跳到对方资料页。 #}
+                            <input type="hidden" name="return_to" value="penpal">
+                            <input type="hidden" name="friend_q" value="{{ friend_query }}">
+                            <input type="hidden" name="page" value="{{ friendship_pagination.currentPage }}">
+                            <input type="hidden" name="received_page" value="{{ received_pagination.currentPage }}">
+                            <input type="hidden" name="sent_page" value="{{ sent_pagination.currentPage }}">
+                            <button class="btn btn-primary btn-sm" type="submit">Invia richiesta</button>
+                        </form>
+                    </div>
+                </article>
+            {% else %}
+                <div class="empty-state suggestion-empty">
+                    <h3>Nessun nuovo suggerimento</h3>
+                    <p>Hai già contattato tutte le persone disponibili. Torna più tardi.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
+

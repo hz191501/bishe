@@ -1,0 +1,86 @@
+
+
+{# 回答评论区：显示评论列表、点赞、删除按钮和新增评论表单。 #}
+<section class="response-comments">
+    <div class="response-comments-heading">
+        <div>
+            <span class="comment-kicker">CONVERSAZIONE</span>
+            <h4>Discussione</h4>
+        </div>
+        <span>{{ response.comments|length }} {{ response.comments|length == 1 ? 'commento' : 'commenti' }}</span>
+    </div>
+
+    <div class="response-comment-list">
+        {% for comment in response.comments %}
+            <article class="response-comment">
+                <span class="comment-avatar">{{ comment.author.username|slice(0, 1)|upper }}</span>
+                <div class="response-comment-main">
+                    <p class="response-comment-meta">
+                        <a href="{{ path('app_profile_show', {id: comment.author.id}) }}">{{ comment.author.username }}</a>
+                        <span>· {{ comment.createdAt|date('d/m/Y H:i') }}</span>
+                    </p>
+                    <p>{{ comment.content|nl2br }}</p>
+                </div>
+
+                <div class="response-comment-actions">
+                    {% if app.user and comment.author != app.user %}
+                        <form method="post" action="{{ path('app_response_comment_like', {id: comment.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('like_comment' ~ comment.id) }}">
+                            <button
+                                class="like-button like-button--small {{ comment.likedBy.contains(app.user) ? 'is-liked' : '' }}"
+                                type="submit"
+                                aria-pressed="{{ comment.likedBy.contains(app.user) ? 'true' : 'false' }}"
+                            >
+                                <span aria-hidden="true">♥</span>
+                                <span>{{ comment.likeCount }}</span>
+                                <span class="visually-hidden">Mi piace</span>
+                            </button>
+                        </form>
+                    {% else %}
+                        <span class="like-button like-button--small like-button--static">
+                            <span aria-hidden="true">♥</span> {{ comment.likeCount }}
+                        </span>
+                    {% endif %}
+
+                    {% if app.user and (comment.author == app.user or is_granted('ROLE_ADMIN')) %}
+                        <form
+                            method="post"
+                            action="{{ path('app_response_comment_delete', {id: comment.id}) }}"
+                            onsubmit="return confirm('Vuoi eliminare questo commento?');"
+                        >
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_comment' ~ comment.id) }}">
+                            <button class="comment-delete" type="submit">Elimina</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </article>
+        {% else %}
+            <p class="response-comment-empty">Nessun commento. Puoi iniziare la discussione.</p>
+        {% endfor %}
+    </div>
+
+    {% if app.user %}
+        <form class="response-comment-form" method="post" action="{{ path('app_response_comment_new', {id: response.id}) }}">
+            <label for="comment-{{ response.id }}">Aggiungi un commento</label>
+            <div class="emoji-enabled-field response-comment-composer">
+                <textarea
+                    id="comment-{{ response.id }}"
+                    name="content"
+                    rows="2"
+                    minlength="2"
+                    maxlength="1000"
+                    required
+                    placeholder="Fai una domanda o aggiungi un chiarimento..."
+                ></textarea>
+                {{ include('shared/_emoji_picker.html.twig', {compact: true}) }}
+            </div>
+            <input type="hidden" name="_token" value="{{ csrf_token('comment_' ~ response.id) }}">
+            <div>
+                <small>Massimo 1000 caratteri</small>
+                <button class="btn btn-primary btn-sm" type="submit">Pubblica commento</button>
+            </div>
+        </form>
+    {% else %}
+        <p class="response-comment-login"><a href="{{ path('app_login') }}">Accedi</a> per partecipare alla discussione.</p>
+    {% endif %}
+</section>

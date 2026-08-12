@@ -1,0 +1,11 @@
+
+
+{# 删除帖子表单：通过 POST 和 CSRF 令牌安全删除帖子。 #}
+<form
+    method="post"
+    action="{{ path('app_bridge_task_delete', {id: bridge_task.id}) }}"
+    onsubmit="return confirm('Vuoi eliminare questa richiesta?');"
+>
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bridge_task.id) }}">
+    <button class="btn btn-outline-danger">Elimina</button>
+</form>

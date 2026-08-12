@@ -1,0 +1,26 @@
+
+
+{# 首页顶部横幅：介绍网站，并根据登录状态显示不同按钮。 #}
+<section class="hero-shell mb-5">
+    <div class="hero-copy">
+        <span class="eyebrow">COMUNITÀ STUDENTESCA INTERCULTURALE</span>
+        <h1>Piccoli aiuti.<br>Legami che restano.</h1>
+        <p>Uno spazio dedicato agli studenti cinesi e italiani per risolvere dubbi concreti, condividere esperienze e conoscersi davvero.</p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+            {% if app.user %}
+                <a class="btn btn-light btn-lg px-4" href="{{ path('app_bridge_task_new') }}">Pubblica una richiesta</a>
+            {% else %}
+                    <a class="btn btn-light btn-lg px-4" href="{{ path('app_register') }}">Unisciti alla comunità</a>
+                {% endif %}
+                <a class="btn btn-outline-light btn-lg px-4" href="{{ path('app_bridge_task_index') }}">Esplora le richieste</a>
+            </div>
+            <div class="hero-trust mt-4">
+                <span>Risposte asincrone</span>
+                <span>Profili reali</span>
+                <span>Scambio rispettoso</span>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <img src="{{ asset('images/illustrations/home-community.webp') }}" alt="Studenti italiani e cinesi collaborano insieme">
+        </div>
+    </section>

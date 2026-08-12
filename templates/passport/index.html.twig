@@ -1,0 +1,79 @@
+
+
+{# 文化护照页面：汇总用户参与的帖子、好友和共同记录。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Passaporto culturale | BuddyBridge
+{% endblock %}
+
+{% block body %}
+    
+    {% set badge_symbols = {
+        first_task: '✦', first_answer: '↗', best_answer: '★',
+        first_friend: '⌒', task_friend: '∞', month_friend: '♥',
+        first_letter: '✉', five_letters: '✎', ten_letters: '❞',
+        first_note: '◇', three_cultures: '⌘', mutual_notes: '◎'
+    } %}
+    <div class="passport-page">
+        
+        <header class="passport-hero">
+            <div>
+                <span class="eyebrow">IL TUO VIAGGIO INTERCULTURALE</span>
+                <h1>Passaporto culturale</h1>
+                <p>Ogni timbro racconta un aiuto dato, una lettera scritta o una scoperta condivisa.</p>
+            </div>
+            <div class="passport-progress-card">
+                <strong>{{ passport.unlocked_count }}/{{ passport.total_count }}</strong>
+                <span>timbri raccolti</span>
+                <div class="passport-progress-track" aria-label="Progresso {{ passport.percentage }}%">
+                    <span style="width: {{ passport.percentage }}%"></span>
+                </div>
+                <small>{{ passport.percentage }}% del viaggio completato</small>
+            </div>
+        </header>
+
+        
+        <nav class="passport-group-nav" aria-label="Categorie dei timbri">
+            {% for group in passport.groups %}
+                <a href="#gruppo-{{ group|lower }}">{{ group }}</a>
+            {% endfor %}
+        </nav>
+
+        {% for group in passport.groups %}
+            
+            <section class="passport-collection" id="gruppo-{{ group|lower }}">
+                <header>
+                    <span class="eyebrow text-primary">COLLEZIONE</span>
+                    <h2>{{ group }}</h2>
+                </header>
+                <div class="passport-badge-grid">
+                    {% for badge in passport.badges|filter(item => item.group == group) %}
+                        <article class="collection-badge {{ badge.unlocked ? 'is-unlocked' : 'is-locked' }}">
+                            <div class="collection-stamp" aria-hidden="true">
+                                <span class="collection-symbol">{{ badge_symbols[badge.key] }}</span>
+                                <span class="collection-number">{{ badge.mark }}</span>
+                                <small>{{ badge.unlocked ? 'BB' : '🔒' }}</small>
+                            </div>
+                            <div>
+                                <span class="badge-state">
+                                    {{ badge.unlocked ? 'TIMBRO SBLOCCATO' : 'TIMBRO DA SCOPRIRE' }}
+                                </span>
+                                <h3>{{ badge.title }}</h3>
+                                <p>{{ badge.description }}</p>
+                                {% if badge.unlocked and badge.date %}
+                                    <time datetime="{{ badge.date|date('c') }}">
+                                        Ottenuto il {{ badge.date|date('d/m/Y') }}
+                                    </time>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+

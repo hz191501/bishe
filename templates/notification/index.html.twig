@@ -1,0 +1,52 @@
+
+
+{# 通知页面：分页显示回答、评论、点赞和好友申请等社区通知。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifiche | BuddyBridge{% endblock %}
+
+{% block body %}
+    <div class="notification-page">
+        <header class="compact-page-header">
+            <div>
+                <span class="eyebrow text-primary">LA TUA ATTIVITÀ</span>
+                <h1>Notifiche</h1>
+                <p>Risposte, Mi piace e commenti ricevuti nella comunità.</p>
+            </div>
+            <span class="soft-badge">
+                {{ pagination.totalItems }} {{ pagination.totalItems == 1 ? 'notifica' : 'notifiche' }}
+            </span>
+        </header>
+
+        <section class="notification-panel">
+            {% for notification in notifications %}
+                <a class="notification-item {{ notification.read ? '' : 'is-unread' }}" href="{{ notification.targetPath }}">
+                    <span class="notification-icon notification-icon--{{ notification.type }}">
+                        {% if 'like' in notification.type %}♥
+                        {% elseif notification.type == 'new_answer' %}↩
+                        {% elseif notification.type == 'best_answer' %}✓
+                        {% else %}●
+                        {% endif %}
+                    </span>
+                    <span class="notification-copy">
+                        <strong>{{ notification.actor.username }}</strong>
+                        <span>{{ notification.message }}</span>
+                        <time>{{ notification.createdAt|date('d/m/Y H:i') }}</time>
+                    </span>
+                    <span class="notification-arrow" aria-hidden="true">→</span>
+                </a>
+            {% else %}
+                <div class="empty-state">
+                    <h2>Nessuna notifica</h2>
+                    <p>Quando qualcuno interagisce con i tuoi contenuti, lo vedrai qui.</p>
+                    <a class="btn btn-outline-primary" href="{{ path('app_bridge_task_index') }}">Esplora le richieste</a>
+                </div>
+            {% endfor %}
+        </section>
+
+        {% include 'shared/_pagination.html.twig' with {
+            pagination: pagination,
+            route_name: 'app_community_notification_index'
+        } only %}
+    </div>
+{% endblock %}

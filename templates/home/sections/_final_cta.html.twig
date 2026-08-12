@@ -1,0 +1,15 @@
+
+{# 首页底部行动区：登录用户进入发帖页，游客进入注册页。 #}
+
+<section class="final-cta">
+    <div>
+        <span class="eyebrow">IL TUO PONTE INIZIA QUI</span>
+        <h2>Hai una domanda? Dall’altra parte c’è qualcuno che può capirti.</h2>
+    </div>
+    {% if app.user %}
+        <a class="btn btn-light btn-lg" href="{{ path('app_bridge_task_new') }}">Crea una richiesta</a>
+    {% else %}
+            <a class="btn btn-light btn-lg" href="{{ path('app_register') }}">Registrati gratuitamente</a>
+        {% endif %}
+    </section>
+{# 首页底部行动区：登录用户进入发帖页，游客进入注册页。 #}

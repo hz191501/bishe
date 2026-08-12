@@ -1,0 +1,14 @@
+
+
+{# 分类公共表单：新增和修改分类页面共同使用。 #}
+{{ form_start(form, {attr: {class: 'polished-form'}}) }}
+{{ form_errors(form) }}
+{{ form_row(form.name) }}
+<div class="form-actions">
+    <a class="btn btn-outline-secondary" href="{{ path('app_category_index') }}">Annulla</a>
+    <button class="btn btn-primary" type="submit">
+        {{ button_label|default('Crea categoria') }}
+        <span aria-hidden="true">→</span>
+    </button>
+</div>
+{{ form_end(form) }}

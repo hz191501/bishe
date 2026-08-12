@@ -1,0 +1,74 @@
+
+
+{# 修改个人资料页面：编辑昵称、地点、语言和兴趣。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifica profilo{% endblock %}
+
+{% block body %}
+    <div class="editor-page">
+        <header class="compact-page-header">
+            <div>
+                <span class="eyebrow text-primary">IL TUO PROFILO</span>
+                <h1>Come ti presenti alla comunità</h1>
+                <p>Queste informazioni aiutano gli altri membri a conoscerti e a contestualizzare i tuoi contributi.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-secondary" href="{{ path('app_profile_password') }}">Modifica password</a>
+                <a class="btn btn-outline-secondary" href="{{ path('app_profile_show', {id: app.user.id}) }}">Visualizza profilo</a>
+            </div>
+        </header>
+
+        <div class="editor-layout">
+            <section class="editor-card">
+                <div class="editor-card-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Informazioni pubbliche</h2>
+                        <p>Email e password non vengono mostrate sul profilo.</p>
+                    </div>
+                </div>
+
+                {{ form_start(form, {attr: {class: 'polished-form'}}) }}
+                    {{ form_errors(form) }}
+                    {{ form_row(form.username) }}
+                    <div class="row">
+                        <div class="col-md-6">{{ form_row(form.nationality) }}</div>
+                        <div class="col-md-6">{{ form_row(form.city) }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">{{ form_row(form.gender) }}</div>
+                        <div class="col-md-6">{{ form_row(form.birthDate) }}</div>
+                    </div>
+                    <div class="profile-preferences-fields">
+                        <h3>Preferenze di scambio</h3>
+                        <p>Questi dati vengono usati per proporti persone compatibili.</p>
+                        {{ form_row(form.spokenLanguages) }}
+                        {{ form_row(form.learningLanguages) }}
+                        {{ form_row(form.interests) }}
+                    </div>
+                    <div class="form-actions">
+                        <a class="btn btn-outline-secondary" href="{{ path('app_profile_show', {id: app.user.id}) }}">Annulla</a>
+                        <button class="btn btn-primary" type="submit">Salva modifiche <span aria-hidden="true">→</span></button>
+                    </div>
+                {{ form_end(form) }}
+            </section>
+
+            <aside class="editor-aside">
+                <div class="profile-preview-card">
+                    <span class="profile-avatar">{{ app.user.username|slice(0, 1)|upper }}</span>
+                    <span class="eyebrow">ANTEPRIMA</span>
+                    <h2>{{ app.user.username }}</h2>
+                    <p>
+                        {{ app.user.city ?: 'Città non indicata' }}
+                        {% if app.user.nationality %} · {{ app.user.nationality }}{% endif %}
+                    </p>
+                </div>
+                <div class="context-card tinted">
+                    <h3>Perché completare il profilo?</h3>
+                    <p>Una provenienza e una città aiutano a comprendere meglio il contesto culturale delle risposte.</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+
+
+{# 通用表情选择器：帖子、回答、评论和信件输入框都可以复用。 #}
+<div class="emoji-picker {{ compact|default(false) ? 'emoji-picker--compact' : '' }}" data-emoji-picker>
+    {# data-emoji-* 属性由 assets/app.js 读取，用来打开或关闭表情面板。 #}
+    <button
+        class="emoji-toggle"
+        type="button"
+        data-emoji-toggle
+        aria-label="Apri la selezione emoji"
+        aria-expanded="false"
+    >
+        <span aria-hidden="true">☺</span>
+        {% if not compact|default(false) %}<span>Emoji</span>{% endif %}
+    </button>
+
+    <div class="emoji-panel" data-emoji-panel hidden>
+        <div class="emoji-panel-heading">
+            <strong>Scegli un’emoji</strong>
+            <span>Tocca per inserirla</span>
+        </div>
+        <div class="emoji-grid">
+            
+            {# 表情集中写在数组里，今后增删时只需要修改这一处。 #}
+            {% set emoji_options = [
+                '😊', '😂', '😄', '🙂', '😉', '😍', '🤗', '🤝', '😃', '😷', '😩', '😅',
+                '👍', '👏', '🙏', '💪', '🙌', '👋', '❤️', '💙', '💌', '🎉', '✨',
+                '🌏', '🇨🇳', '🇮🇹', '📎', '🎵', '🎮', '✈️'
+            ] %}
+            {# 为数组中的每个表情生成一个可点击按钮。 #}
+            {% for emoji in emoji_options %}
+                <button type="button" data-emoji="{{ emoji }}" aria-label="Inserisci {{ emoji }}">{{ emoji }}</button>
+            {% endfor %}
+        </div>
+    </div>
+</div>

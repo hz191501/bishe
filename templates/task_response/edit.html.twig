@@ -1,0 +1,27 @@
+
+
+{# 修改回答页面：加载原回答内容并复用回答公共表单。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Modifica risposta
+{% endblock %}
+{% block body %}
+    <div class="editor-page">
+        <header class="compact-page-header">
+            <div>
+                <span class="eyebrow text-primary">IL TUO CONTRIBUTO</span>
+                <h1>Modifica la risposta</h1>
+                <p>Rendi il testo più chiaro senza perdere le informazioni utili.</p>
+            </div>
+        </header>
+        <section class="editor-card mx-auto editor-card-narrow">
+            <div class="editor-card-heading">
+                <span>01</span>
+                <div>
+                    <h2>Contenuto della risposta</h2>
+                    <p>Le modifiche saranno indicate nella pagina della richiesta.</p>
+                </div>
+            </div>
+            {{ include('task_response/_form.html.twig', {button_label:'Salva modifiche'}) }}
+        </section>
+    </div>
+{% endblock %}

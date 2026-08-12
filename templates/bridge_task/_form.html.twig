@@ -1,0 +1,45 @@
+
+
+{# 帖子公共表单：发布页和修改页共同使用标题、内容和分类字段。 #}
+{{ form_start(form, {attr: {class: 'request-form'}}) }}
+{{ form_errors(form) }}
+
+<div class="request-field">
+    {{ form_label(form.title) }}
+    {{ form_widget(form.title) }}
+    {{ form_help(form.title) }}
+    {{ form_errors(form.title) }}
+</div>
+
+<div class="request-field emoji-enabled-field">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description) }}
+    {{ include('shared/_emoji_picker.html.twig') }}
+    <div class="field-meta">
+        <span>{{ form_help(form.description) }}</span>
+        <span>Massimo 5000 caratteri</span>
+    </div>
+    {{ form_errors(form.description) }}
+</div>
+
+<div class="request-field">
+    {{ form_label(form.category) }}
+    {{ form_widget(form.category) }}
+    {{ form_help(form.category) }}
+    {{ form_errors(form.category) }}
+</div>
+
+<div class="request-form-actions">
+    <a
+        class="btn btn-outline-secondary"
+        href="{{ bridge_task.id ? path('app_bridge_task_show', {id: bridge_task.id}) : path('app_bridge_task_index') }}"
+    >
+        Annulla
+    </a>
+    <button class="btn btn-primary btn-lg" type="submit">
+        <span>{{ button_label|default('Salva') }}</span>
+        <span aria-hidden="true">→</span>
+    </button>
+</div>
+
+{{ form_end(form) }}

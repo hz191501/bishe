@@ -1,0 +1,11 @@
+
+
+{# 删除分类表单：只有管理员可使用，并通过 CSRF 令牌保护操作。 #}
+<form
+    method="post"
+    action="{{ path('app_category_delete', {id: category.id}) }}"
+    onsubmit="return confirm('Vuoi eliminare questa categoria?');"
+>
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+    <button class="btn btn-sm btn-outline-danger">Elimina</button>
+</form>

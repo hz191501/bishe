@@ -1,0 +1,30 @@
+
+{# 首页统计区：显示成员、帖子、回答和分类总数。 #}
+
+<section class="stats-strip mb-5" aria-label="Dati della comunità">
+    <div>
+        <strong>
+            {{ user_count }}
+        </strong>
+        <span>Membri</span>
+    </div>
+    <div>
+        <strong>
+            {{ task_count }}
+        </strong>
+        <span>Richieste pubblicate</span>
+    </div>
+    <div>
+        <strong>
+            {{ response_count }}
+        </strong>
+        <span>Risposte condivise</span>
+    </div>
+    <div>
+        <strong>
+            {{ categories|length }}
+        </strong>
+        <span>Aree di supporto</span>
+    </div>
+</section>
+{# 首页统计区：显示成员、帖子、回答和分类总数。 #}

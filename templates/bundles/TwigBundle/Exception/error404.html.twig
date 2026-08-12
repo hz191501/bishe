@@ -1,0 +1,14 @@
+
+
+{# 404 页面：访问不存在的网址或已删除内容时显示。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Pagina non trovata
+{% endblock %}
+{% block body %}
+    <div class="error-page">
+        <span>404</span>
+        <h1>Pagina non trovata</h1>
+        <p>Il contenuto che cerchi non esiste o non è più disponibile.</p>
+        <a class="btn btn-primary" href="{{ path('app_home') }}">Torna alla home</a>
+    </div>
+{% endblock %}

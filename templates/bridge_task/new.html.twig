@@ -1,0 +1,71 @@
+
+
+{# 发布帖子页面：显示发帖步骤、帖子表单和填写提示。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Nuova richiesta | BuddyBridge
+{% endblock %}
+{% block body %}
+    <div class="request-create-page">
+        <header class="request-create-hero site-illustrated-hero">
+            <div>
+                <span class="eyebrow">NUOVA RICHIESTA</span>
+                <h1>Racconta ciò di cui hai bisogno.</h1>
+                <p>Una richiesta chiara aiuta la comunità a darti una risposta utile e concreta.</p>
+            </div>
+            <div class="request-progress" aria-label="Procedura di pubblicazione">
+                <span class="active">
+                    <b>1</b> Scrivi</span>
+                <i>
+                </i>
+                <span>
+                    <b>2</b> Pubblica</span>
+                <i>
+                </i>
+                <span>
+                    <b>3</b> Ricevi aiuto</span>
+            </div>
+        </header>
+        <div class="request-create-grid">
+            <section class="request-form-panel">
+                <div class="panel-heading">
+                    <span class="panel-number">01</span>
+                    <div>
+                        <h2>Dettagli della richiesta</h2>
+                        <p>Tutti i campi sono necessari per pubblicare.</p>
+                    </div>
+                </div>
+                {{ include('bridge_task/_form.html.twig', {button_label:'Pubblica la richiesta'}) }}
+            </section>
+            <aside class="request-sidebar">
+                <div class="guidance-card accent-card">
+                    <span class="guidance-icon">✦</span>
+                    <h2>Come ottenere una buona risposta</h2>
+                    <ul>
+                        <li>
+                            <strong>Sii specifico.</strong> Evita titoli troppo generici.</li>
+                        <li>
+                            <strong>Dai il contesto.</strong> Spiega dove nasce il problema.</li>
+                        <li>
+                            <strong>Fai una domanda.</strong> Indica chiaramente cosa vuoi sapere.</li>
+                    </ul>
+                </div>
+                <div class="guidance-card">
+                    <span class="eyebrow text-primary">PRIMA DI PUBBLICARE</span>
+                    <h3>Controllo rapido</h3>
+                    <label>
+                        <span>✓</span> Ho scelto un titolo comprensibile</label>
+                    <label>
+                        <span>✓</span> Ho aggiunto informazioni utili</label>
+                    <label>
+                        <span>✓</span> Non ho inserito dati sensibili</label>
+                </div>
+                <div class="privacy-note">
+                    <span>◉</span>
+                    <p>
+                        <strong>La richiesta sarà pubblica.</strong>
+                        <br>Non inserire password, documenti personali, numeri di telefono o indirizzi privati.</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

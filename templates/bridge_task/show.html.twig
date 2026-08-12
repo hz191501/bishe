@@ -1,0 +1,222 @@
+
+
+{# 帖子详情页面：显示问题、作者、点赞、回答、评论和管理操作。 #}
+{% extends 'base.html.twig' %}
+{% block title %}{{ bridge_task.title }}{% endblock %}
+{% block body %}
+<div class="task-detail-page">
+
+{# 根据进入详情页的来源，准备统一的返回地址。 #}
+{% if app.request.query.get('return_profile') %}
+    {% set taskReturnPath = path('app_profile_show', {
+        id: app.request.query.get('return_profile'),
+        published_page: app.request.query.get('return_published_page') ?: 1,
+        participated_page: app.request.query.get('return_participated_page') ?: 1
+    }) %}
+    {% set taskReturnLabel = 'Torna al profilo' %}
+{% else %}
+    {% set taskReturnPath = path('app_bridge_task_index', {
+        page: app.request.query.get('return_page') ?: 1,
+        q: app.request.query.get('return_q'),
+        status: app.request.query.get('return_status'),
+        category: app.request.query.get('return_category')
+    }) %}
+    {% set taskReturnLabel = 'Torna alle richieste' %}
+{% endif %}
+
+<nav class="task-breadcrumb" aria-label="Percorso">
+<a href="{{ taskReturnPath }}">{{ app.request.query.get('return_profile') ? 'Profilo' : 'Richieste' }}</a>
+<span aria-hidden="true">/</span>
+<span>{{ bridge_task.category.name }}</span>
+</nav>
+
+<article class="question-hero category-theme--{{ bridge_task.category.id }}">
+<div class="question-accent" aria-hidden="true">
+</div>
+<div class="question-main">
+<div class="question-topline">
+<span class="soft-badge category-badge">
+{% include 'shared/_category_icon.html.twig' with {category: bridge_task.category} only %}
+{{ bridge_task.category.name }}
+</span>
+<span class="status-dot {{ bridge_task.status == 'resolved' ? 'resolved' : '' }}">
+    {{ bridge_task.status == 'resolved' ? 'Risolta' : 'Aperta' }}
+</span>
+</div>
+<h1>{{ bridge_task.title }}</h1>
+<div class="question-content">{{ bridge_task.description|nl2br }}</div>
+<div class="question-author">
+<a class="author-profile" href="{{ path('app_profile_show', {
+    id: bridge_task.author.id,
+    source_task_id: bridge_task.id
+}) }}">
+<span class="profile-avatar small">{{ bridge_task.author.username|slice(0,1)|upper }}</span>
+<span>
+<small>Pubblicata da</small>
+<strong>{{ bridge_task.author.username }}</strong>
+</span>
+</a>
+<div class="question-dates">
+<span>{{ bridge_task.createdAt|date('d/m/Y') }}</span>
+<span>{{ bridge_task.createdAt|date('H:i') }}</span>
+{% if bridge_task.updatedAt %}
+<span>Aggiornata il {{ bridge_task.updatedAt|date('d/m/Y H:i') }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<aside class="question-aside">
+<div class="question-stat">
+<strong>{{ responses|length }}</strong>
+<span>{{ responses|length == 1 ? 'risposta' : 'risposte' }}</span>
+</div>
+<div class="question-stat">
+<strong>{{ bridge_task.status == 'resolved' ? '✓' : '•' }}</strong>
+<span>{{ bridge_task.status == 'resolved' ? 'soluzione trovata' : 'discussione aperta' }}</span>
+</div>
+<div class="question-actions">
+{# 作者不能给自己的帖子点赞；未登录用户只看到点赞数量。 #}
+{% if app.user and bridge_task.author != app.user %}
+<form method="post" action="{{ path('app_bridge_task_like', {id: bridge_task.id}) }}">
+<input type="hidden" name="_token" value="{{ csrf_token('like_task' ~ bridge_task.id) }}">
+<button
+    class="like-button {{ bridge_task.likedBy.contains(app.user) ? 'is-liked' : '' }}"
+    type="submit"
+    aria-pressed="{{ bridge_task.likedBy.contains(app.user) ? 'true' : 'false' }}"
+>
+♥ {{ bridge_task.likeCount }} Mi piace
+</button>
+</form>
+{% else %}
+<span class="like-button like-button--static">♥ {{ bridge_task.likeCount }} Mi piace</span>
+{% endif %}
+{% if app.user and bridge_task.author != app.user %}
+<a class="btn btn-primary" href="{{ path('app_task_response_new', {id:bridge_task.id}) }}">Scrivi una risposta</a>
+{% endif %}
+{#
+   从帖子列表进入时，网址会保存原来的页码和筛选条件；
+   直接从首页或个人主页进入时没有这些参数，因此默认返回列表第1页。
+#}
+<a class="btn btn-outline-secondary" href="{{ taskReturnPath }}">{{ taskReturnLabel }}</a>
+{# 只有帖子作者或管理员可以修改和删除帖子。 #}
+{% if app.user and (bridge_task.author == app.user or is_granted('ROLE_ADMIN')) %}
+<div class="question-admin-actions">
+<a
+    class="btn btn-sm btn-outline-primary"
+    href="{{ path('app_bridge_task_edit', {id: bridge_task.id}) }}"
+>
+    Modifica
+</a>
+{{ include('bridge_task/_delete_form.html.twig') }}
+</div>
+{% endif %}
+</div>
+</aside>
+</article>
+
+<section class="answers-section">
+<div class="section-heading answers-heading">
+<div>
+<span class="eyebrow text-primary">CONTRIBUTI DELLA COMUNITÀ</span>
+<h2>Risposte</h2>
+<p>Esperienze, indicazioni e chiarimenti condivisi dagli altri studenti.</p>
+</div>
+<span class="answer-count">{{ response_pagination.totalItems }}</span>
+</div>
+<div class="answer-list">
+{# 逐条显示回答；bestAnswer 为真时添加“最佳回答”样式。 #}
+{% for response in responses %}
+<article id="response-{{ response.id }}" class="answer-card {{ response.bestAnswer ? 'answer-best' : '' }}">
+<header class="answer-header">
+<a class="author-profile" href="{{ path('app_profile_show', {
+    id: response.author.id,
+    source_task_id: bridge_task.id
+}) }}">
+<span class="profile-avatar small">{{ response.author.username|slice(0,1)|upper }}</span>
+<span>
+<strong>{{ response.author.username }}</strong>
+<small>{{ response.createdAt|date('d/m/Y H:i') }}
+{% if response.updatedAt %}
+· modificata
+{% endif %}
+</small>
+</span>
+</a>
+{% if response.bestAnswer %}
+<span class="best-answer-badge">
+<span aria-hidden="true">✓</span> Risposta migliore</span>
+{% endif %}
+</header>
+<div class="answer-content">{{ response.content|nl2br }}</div>
+<div class="answer-toolbar">
+<div class="answer-public-actions">
+{% if app.user and response.author != app.user %}
+<form method="post" action="{{ path('app_task_response_like', {id:response.id}) }}">
+<input type="hidden" name="_token" value="{{ csrf_token('like_response' ~ response.id) }}">
+<button
+    class="like-button {{ response.likedBy.contains(app.user) ? 'is-liked' : '' }}"
+    type="submit"
+    aria-pressed="{{ response.likedBy.contains(app.user) ? 'true' : 'false' }}"
+>
+<span aria-hidden="true">♥</span>
+<span>{{ response.likeCount }}</span>
+<span class="like-label">Mi piace</span>
+</button>
+</form>
+{% else %}
+<span class="like-button like-button--static">
+<span aria-hidden="true">♥</span>
+<span>{{ response.likeCount }}</span>
+<span class="like-label">Mi piace</span>
+</span>
+{% endif %}
+</div>
+<div class="answer-management">
+{# 回答作者或管理员可以修改、删除该回答。 #}
+{% if app.user and (response.author == app.user or is_granted('ROLE_ADMIN')) %}
+<a
+    class="btn btn-sm btn-outline-primary"
+    href="{{ path('app_task_response_edit', {id: response.id}) }}"
+>
+    Modifica
+</a>
+{{ include('task_response/_delete_form.html.twig', {task_response: response}) }}
+{% endif %}
+
+{# 帖子仍处于开放状态时，发帖人可以选择最佳回答。 #}
+{% if app.user and bridge_task.author == app.user and bridge_task.status == 'open' %}
+<form method="post" action="{{ path('app_task_response_best', {id:response.id}) }}">
+<input type="hidden" name="_token" value="{{ csrf_token('best' ~ response.id) }}">
+<button class="btn btn-sm btn-success">Scegli come migliore</button>
+</form>
+{% endif %}
+</div>
+</div>
+{# 每条回答下方复用同一个评论列表组件。 #}
+{{ include('response_comment/_list.html.twig', {response:response}) }}</article>
+{% else %}
+<div class="empty-state answer-empty">
+<span class="empty-state-icon" aria-hidden="true">✦</span>
+<h3>Nessuna risposta</h3>
+<p>
+{% if app.user and bridge_task.author != app.user %}
+Puoi essere la prima persona ad aiutare.
+{% else %}
+La comunità non ha ancora risposto.
+{% endif %}
+</p>
+{% if app.user and bridge_task.author != app.user %}
+<a class="btn btn-primary" href="{{ path('app_task_response_new', {id:bridge_task.id}) }}">Scrivi la prima risposta</a>
+{% endif %}
+</div>
+{% endfor %}
+</div>
+{% include 'shared/_pagination.html.twig' with {
+    pagination: response_pagination,
+    route_name: 'app_bridge_task_show',
+    route_params: {id: bridge_task.id},
+    page_param: 'response_page'
+} %}
+</section>
+</div>{% endblock %}

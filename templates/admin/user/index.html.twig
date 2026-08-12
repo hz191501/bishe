@@ -1,0 +1,101 @@
+
+
+{# 管理员用户列表：搜索用户、查看统计、分页并调整管理员角色。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestione utenti{% endblock %}
+
+{% block body %}
+    <div class="admin-users-page">
+        
+        <header class="admin-users-header site-illustrated-hero">
+            <div>
+                <span class="eyebrow">AMMINISTRAZIONE</span>
+                <h1>Gestione utenti</h1>
+                <p>Consulta gli account registrati e assegna in modo controllato il ruolo di amministratore.</p>
+            </div>
+            <div class="admin-summary">
+                <div><strong>{{ userCount }}</strong><span>utenti registrati</span></div>
+                <div><strong>{{ administratorCount }}</strong><span>amministratori</span></div>
+            </div>
+        </header>
+
+        
+        <section class="admin-users-panel">
+            <div class="admin-users-toolbar">
+                <div>
+                    <h2>Account registrati</h2>
+                    <p>{{ pagination.totalItems }} {{ pagination.totalItems == 1 ? 'risultato' : 'risultati' }}</p>
+                </div>
+                <form class="admin-user-search" method="get">
+                    <label class="visually-hidden" for="admin-user-query">Cerca un utente</label>
+                    <input id="admin-user-query" name="q" type="search" value="{{ query }}" placeholder="Email o nome utente">
+                    <button class="btn btn-primary" type="submit">Cerca</button>
+                    {% if query %}<a class="btn btn-outline-secondary" href="{{ path('app_admin_user_index') }}">Azzera</a>{% endif %}
+                </form>
+            </div>
+
+            <div class="admin-user-list">
+                {% for user in users %}
+                    <article class="admin-user-card">
+                        <div class="admin-user-identity">
+                            <span class="profile-avatar small">{{ user.username|slice(0, 1)|upper }}</span>
+                            <div>
+                                <div class="admin-user-name">
+                                    <h3>{{ user.username }}</h3>
+                                    {% if 'ROLE_ADMIN' in user.roles %}
+                                        <span class="admin-role-badge">Amministratore</span>
+                                    {% else %}
+                                        <span class="user-role-badge">Utente</span>
+                                    {% endif %}
+                                </div>
+                                <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                                <p>
+                                    {{ user.city ?: 'Città non indicata' }}
+                                    {% if user.nationality %} · {{ user.nationality }}{% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="admin-user-stats">
+                            <span><strong>{{ user.bridgeTasks|length }}</strong> richieste</span>
+                            <span><strong>{{ user.taskResponses|length }}</strong> risposte</span>
+                            <span>Registrato il {{ user.createdAt|date('d/m/Y') }}</span>
+                        </div>
+
+                        <div class="admin-user-actions">
+                            <a class="btn btn-outline-secondary" href="{{ path('app_profile_show', {
+                                id: user.id,
+                                return_admin_page: pagination.currentPage,
+                                return_admin_q: query
+                            }) }}">Profilo</a>
+                            <form method="post" action="{{ path('app_admin_user_role', {id: user.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('change_admin_role' ~ user.id) }}">
+                                <input type="hidden" name="q" value="{{ query }}">
+                                <input type="hidden" name="page" value="{{ pagination.currentPage }}">
+                                {% if app.user.id == user.id and 'ROLE_ADMIN' in user.roles %}
+                                    <button class="btn btn-outline-secondary" type="button" disabled>Il tuo account</button>
+                                {% elseif 'ROLE_ADMIN' in user.roles %}
+                                    <button class="btn btn-outline-danger" type="submit">Rimuovi ruolo admin</button>
+                                {% else %}
+                                    <button class="btn btn-primary" type="submit">Nomina amministratore</button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </article>
+                {% else %}
+                    <div class="empty-state">
+                        <h2>Nessun utente trovato</h2>
+                        <p>Prova con un altro nome utente o indirizzo email.</p>
+                        <a class="btn btn-outline-primary" href="{{ path('app_admin_user_index') }}">Mostra tutti gli utenti</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% include 'shared/_pagination.html.twig' with {
+                pagination: pagination,
+                route_name: 'app_admin_user_index'
+            } only %}
+        </section>
+    </div>
+{% endblock %}

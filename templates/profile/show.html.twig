@@ -1,0 +1,209 @@
+
+
+{# 用户公开资料页面：显示个人信息、统计、帖子、回答和匹配信息。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profilo di {{ profile_user.username }}{% endblock %}
+
+{% block body %}
+    <div class="profile-header illustrated-profile mb-4">
+        <div class="profile-avatar">{{ profile_user.username|slice(0, 1)|upper }}</div>
+        <div class="profile-main">
+            <span class="eyebrow text-primary">PROFILO DELLA COMUNITÀ</span>
+            <h1>{{ profile_user.username }}</h1>
+            <p>
+                {{ profile_user.city ?: 'Città non indicata' }}
+                {% if profile_user.nationality %} · {{ profile_user.nationality }}{% endif %}
+            </p>
+            <p class="meta">Membro dal {{ profile_user.createdAt|date('d/m/Y') }}</p>
+            <div class="profile-match-summary">
+                {% if profile_user.genderLabel %}
+                    <p>
+                        <span>Genere:</span>
+                        <strong>{{ profile_user.genderLabel }}</strong>
+                    </p>
+                {% endif %}
+                {% if profile_user.age is not null %}
+                    <p>
+                        <span>Età:</span>
+                        <strong>{{ profile_user.age }} anni</strong>
+                    </p>
+                {% endif %}
+                <p>
+                    <span>Lingue parlate:</span>
+                    <strong>{{ profile_user.spokenLanguages ?: 'Non indicate' }}</strong>
+                </p>
+                <p>
+                    <span>Lingue da imparare:</span>
+                    <strong>{{ profile_user.learningLanguages ?: 'Non indicate' }}</strong>
+                </p>
+                <p>
+                    <span>Interessi:</span>
+                    <strong>{{ profile_user.interests ?: 'Non indicati' }}</strong>
+                </p>
+            </div>
+
+            
+            {% if app.user == profile_user %}
+                <div class="profile-edit-action">
+                    <a class="btn btn-primary" href="{{ path('app_profile_edit') }}">Modifica profilo</a>
+                </div>
+            {% endif %}
+
+            {# 从后台用户列表进入个人资料时，显示保留原页码和搜索词的返回按钮。 #}
+            {% if is_granted('ROLE_ADMIN') and app.request.query.get('return_admin_page') %}
+                <div class="profile-edit-action">
+                    <a class="btn btn-outline-light" href="{{ path('app_admin_user_index', {
+                        page: app.request.query.get('return_admin_page'),
+                        q: app.request.query.get('return_admin_q')
+                    }) }}">Torna agli utenti</a>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if app.user and app.user != profile_user %}
+            {% if connection and connection.status == 'accepted' %}
+                <a class="btn btn-primary" href="{{ path('app_penpal_chat', {id: connection.id}) }}">Scrivi un messaggio</a>
+            {% elseif connection and connection.status == 'pending' %}
+                {% if connection.receiver == app.user %}
+                    <div class="d-flex flex-wrap gap-2">
+                        <form method="post" action="{{ path('app_penpal_accept', {id: connection.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('penpal_accept_' ~ connection.id) }}">
+                            <button class="btn btn-primary btn-sm" type="submit">Accetta</button>
+                        </form>
+                        <form method="post" action="{{ path('app_penpal_reject', {id: connection.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('penpal_reject_' ~ connection.id) }}">
+                            <button class="btn btn-outline-light btn-sm" type="submit">Rifiuta</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <span class="soft-badge">Richiesta inviata</span>
+                {% endif %}
+            {% elseif connection and connection.status == 'rejected' %}
+                <span class="soft-badge">Richiesta non accettata</span>
+            {% else %}
+                <form method="post" action="{{ path('app_penpal_request', {id: profile_user.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('penpal_request_' ~ profile_user.id) }}">
+                    {% if app.request.query.get('source_task_id') %}
+                        <input
+                            type="hidden"
+                            name="source_task_id"
+                            value="{{ app.request.query.get('source_task_id') }}"
+                        >
+                    {% endif %}
+                    <button class="btn btn-primary">Invia richiesta di amicizia</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="trust-grid mb-5">
+        <div><strong>{{ task_count }}</strong><span>Richieste</span></div>
+        <div><strong>{{ response_count }}</strong><span>Risposte</span></div>
+        <div><strong>{{ best_answer_count }}</strong><span>Risposte migliori</span></div>
+        <div>
+            <strong>{{ received_like_count }}</strong>
+            <span>Mi piace ricevuti</span>
+        </div>
+    </div>
+
+    
+    <section class="profile-activity-section" id="richieste-pubblicate">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow text-primary">CREAZIONI</span>
+                <h2>Richieste pubblicate</h2>
+                <p>Le domande aperte direttamente da {{ profile_user.username }}.</p>
+            </div>
+            <span class="soft-badge">{{ task_count }}</span>
+        </div>
+
+        <div class="row g-4">
+            {% for task in tasks %}
+                <div class="col-md-6 col-lg-4">
+                    <article class="home-task-card">
+                        <span class="soft-badge">{{ task.category.name }}</span>
+                        <h3>{{ task.title }}</h3>
+                        <p>
+                            {{ task.description|slice(0, 100) }}
+                            {% if task.description|length > 100 %}…{% endif %}
+                        </p>
+                        <div class="task-footer">
+                            <span>{{ task.status == 'resolved' ? 'Risolta' : 'Aperta' }}</span>
+                            <a href="{{ path('app_bridge_task_show', {
+                                id: task.id,
+                                return_profile: profile_user.id,
+                                return_published_page: published_pagination.currentPage,
+                                return_participated_page: participated_pagination.currentPage
+                            }) }}">Apri →</a>
+                        </div>
+                    </article>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <p>Questo utente non ha ancora pubblicato richieste.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% include 'shared/_pagination.html.twig' with {
+            pagination: published_pagination,
+            route_name: 'app_profile_show',
+            route_params: {id: profile_user.id},
+            page_param: 'published_page'
+        } %}
+    </section>
+
+    
+    <section class="profile-activity-section profile-participation-section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow text-primary">PARTECIPAZIONE</span>
+                <h2>Discussioni a cui ha partecipato</h2>
+                <p>Richieste di altri utenti alle quali {{ profile_user.username }} ha risposto.</p>
+            </div>
+            <span class="soft-badge">{{ participated_task_count }}</span>
+        </div>
+
+        <div class="participated-task-list">
+            {% for task in participated_tasks %}
+                <a class="participated-task-card" href="{{ path('app_bridge_task_show', {
+                    id: task.id,
+                    return_profile: profile_user.id,
+                    return_published_page: published_pagination.currentPage,
+                    return_participated_page: participated_pagination.currentPage
+                }) }}">
+                    <span class="participated-task-category">{{ task.category.name }}</span>
+                    <span class="participated-task-copy">
+                        <strong>{{ task.title }}</strong>
+                        <small>
+                            {{ task.responses|filter(response => response.author == profile_user)|length }}
+                            {% set response_count = task.responses|filter(
+                                response => response.author == profile_user
+                            )|length %}
+                            {{ response_count == 1 ? 'risposta pubblicata' : 'risposte pubblicate' }}
+                        </small>
+                    </span>
+                    <span class="status-dot {{ task.status == 'resolved' ? 'resolved' : '' }}">
+                        {{ task.status == 'resolved' ? 'Risolta' : 'Aperta' }}
+                    </span>
+                    <span class="participated-task-arrow" aria-hidden="true">→</span>
+                </a>
+            {% else %}
+                <div class="empty-state">
+                    <h3>Nessuna partecipazione</h3>
+                    <p>Le richieste alle quali questo utente risponde appariranno qui.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% include 'shared/_pagination.html.twig' with {
+            pagination: participated_pagination,
+            route_name: 'app_profile_show',
+            route_params: {id: profile_user.id},
+            page_param: 'participated_page'
+        } %}
+    </section>
+{% endblock %}

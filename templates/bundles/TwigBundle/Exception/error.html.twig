@@ -1,0 +1,16 @@
+
+
+{# 通用错误页面：发生未分类错误时向用户显示友好提示。 #}
+{% extends 'base.html.twig' %}
+{% block title %}Si è verificato un problema
+{% endblock %}
+{% block body %}
+    <div class="error-page">
+        <span>
+            {{ status_code }}
+        </span>
+        <h1>Qualcosa non ha funzionato</h1>
+        <p>Riprova tra poco oppure torna alla pagina iniziale.</p>
+        <a class="btn btn-primary" href="{{ path('app_home') }}">Torna alla home</a>
+    </div>
+{% endblock %}

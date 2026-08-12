@@ -1,0 +1,85 @@
+{# 注册页面：显示 RegistrationFormType 的字段、验证错误和使用条件。 #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Registrazione{% endblock %}
+
+{% block body %}
+    <div class="auth-shell register-shell">
+        <section class="auth-visual auth-visual--register">
+            <span class="eyebrow">ENTRA NELLA COMUNITÀ</span>
+            <h1>Un piccolo aiuto può creare un legame.</h1>
+            <p>Crea il tuo profilo e partecipa allo scambio tra studenti italiani e cinesi.</p>
+            <div class="auth-points">
+                <span>✓ Pubblica richieste pratiche</span>
+                <span>✓ Condividi ciò che sai</span>
+                <span>✓ Trova nuovi amici di penna</span>
+            </div>
+        </section>
+
+        <section class="auth-panel">
+            <div class="auth-panel-heading">
+                <img class="brand-mark" src="{{ asset('images/buddybridge-mark.svg') }}" alt="">
+                <div>
+                    <h2>Crea il tuo account</h2>
+                    <p>I campi contrassegnati sono necessari.</p>
+                </div>
+            </div>
+
+            {{ form_start(registrationForm, {attr: {class: 'polished-form registration-form'}}) }}
+            {{ form_errors(registrationForm) }}
+
+            <div class="registration-fields-grid">
+                {{ form_row(registrationForm.email, {
+                    label: 'Email',
+                    attr: {placeholder: 'nome@esempio.it'}
+                }) }}
+                {{ form_row(registrationForm.username, {
+                    label: 'Nome utente',
+                    attr: {placeholder: 'Come vuoi essere chiamato'}
+                }) }}
+                {{ form_row(registrationForm.nationality, {label: 'Nazionalità'}) }}
+                {{ form_row(registrationForm.city, {label: 'Città'}) }}
+            </div>
+
+            <div class="registration-preferences">
+                <h3>Il tuo scambio ideale</h3>
+                <div class="registration-preferences-grid">
+                    {{ form_row(registrationForm.spokenLanguages) }}
+                    {{ form_row(registrationForm.learningLanguages) }}
+                    <div class="registration-field-wide">
+                        {{ form_row(registrationForm.interests) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="registration-password">
+                {{ form_row(registrationForm.plainPassword, {
+                    label: 'Password',
+                    help: 'Usa almeno 8 caratteri.'
+                }) }}
+            </div>
+
+            <div class="registration-consent">
+                <div>
+                    {{ form_row(registrationForm.agreeTerms, {
+                        label: 'Accetto le condizioni di utilizzo e la privacy'
+                    }) }}
+                    <p class="form-legal">
+                        Consulta le
+                        <a href="{{ path('app_terms') }}" target="_blank">condizioni di utilizzo</a>
+                        e l’<a href="{{ path('app_privacy') }}" target="_blank">informativa sulla privacy</a>.
+                    </p>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    Crea account <span aria-hidden="true">→</span>
+                </button>
+            </div>
+
+            {{ form_end(registrationForm) }}
+
+            <p class="auth-switch">
+                Hai già un account? <a href="{{ path('app_login') }}">Accedi</a>
+            </p>
+        </section>
+    </div>
+{% endblock %}

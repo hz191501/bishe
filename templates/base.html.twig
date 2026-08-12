@@ -1,0 +1,185 @@
+﻿
+
+{# 全站基础模板：统一 HTML 头部、资源引入、导航栏、提示消息、内容插槽和页脚。 #}
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {# 子页面可以覆盖这个区块，设置浏览器标签页标题。 #}
+        <title>
+            {% block title %}BuddyBridge
+            {% endblock %}
+        </title>
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/buddybridge-mark.svg') }}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+            rel="stylesheet"
+            >
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        {# 全站公共样式；子页面也可以在此补充自己的样式。 #}
+        {% block stylesheets %}
+        {% endblock %}
+        {# JavaScript 入口，importmap 会加载 assets/app.js。 #}
+        {% block javascripts %}
+            {% block importmap %}
+                {{ importmap('app') }}
+            {% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        {# 公共导航栏：按照登录状态和用户角色显示不同入口。 #}
+        <nav class="navbar navbar-expand-lg navbar-dark main-nav">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('app_home') }}">
+                    <img class="brand-mark" src="{{ asset('images/buddybridge-mark.svg') }}" alt="">
+                    <span>BuddyBridge</span>
+                </a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNav"
+                    aria-controls="mainNav"
+                    aria-expanded="false"
+                    aria-label="Apri il menu di navigazione"
+                >
+                    <span class="navbar-toggler-icon">
+                    </span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav primary-nav ms-lg-4 me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}" href="{{ path('app_home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_bridge_task' ? 'active' : '' }}" href="{{ path('app_bridge_task_index') }}">Richieste</a>
+                        </li>
+                        {# 以下页面入口只对已经登录的用户显示。 #}
+                        {% if app.user %}
+                            <li class="nav-item">
+                                <a class="nav-link nav-penpal-link {{ app.request.attributes.get('_route') starts with 'app_penpal' ? 'active' : '' }}" href="{{ path('app_penpal_index') }}">
+                                    Amici di penna
+                                    {% set penpal_notification_count = app.user.penpalNotificationCount %}
+                                    {% if penpal_notification_count > 0 %}
+                                        <span class="nav-notification-badge" aria-label="{{ penpal_notification_count }} notifiche non lette">
+                                            {{ penpal_notification_count > 99 ? '99+' : penpal_notification_count }}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'app_cultural_passport' ? 'active' : '' }}" href="{{ path('app_cultural_passport') }}">
+                                    Il mio viaggio
+                                </a>
+                            </li>
+                            {# 管理员才会看到分类和用户管理入口。 #}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item">
+                                    <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_category' ? 'active' : '' }}" href="{{ path('app_category_index') }}">Categorie</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_admin_user' ? 'active' : '' }}" href="{{ path('app_admin_user_index') }}">Utenti</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                    <form class="nav-search" action="{{ path('app_bridge_task_index') }}" method="get" role="search">
+                        <label class="visually-hidden" for="nav-search-input">Cerca richieste</label>
+                        <input
+                            id="nav-search-input"
+                            name="q"
+                            type="search"
+                            value="{{ app.request.query.get('q') }}"
+                            placeholder="Cerca richieste..."
+                            autocomplete="off"
+                        >
+                        <button type="submit" aria-label="Cerca">
+                            <span aria-hidden="true">⌕</span>
+                        </button>
+                    </form>
+                    <div class="navbar-nav nav-account align-items-lg-center gap-lg-2">
+                        {# 右侧账户区域：登录后显示通知、用户名和退出按钮。 #}
+                        {% if app.user %}
+                            <a class="nav-community-notification" href="{{ path('app_community_notification_index') }}" aria-label="Notifiche della comunità">
+                                <svg class="nav-notification-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <rect x="3.5" y="5.5" width="17" height="13" rx="2"></rect>
+                                    <path d="M4.5 7l7.5 5.8L19.5 7"></path>
+                                </svg>
+                                {% set community_notification_count = app.user.unreadCommunityNotificationCount %}
+                                {% if community_notification_count > 0 %}
+                                    <span class="nav-notification-badge">
+                                        {{ community_notification_count > 99 ? '99+' : community_notification_count }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                            <a class="nav-profile nav-profile-name" href="{{ path('app_profile_show', {id: app.user.id}) }}" aria-label="Apri il profilo di {{ app.user.username }}">
+                                {{ app.user.username }}
+                            </a>
+                            <a class="nav-link nav-logout" href="{{ path('app_logout') }}">Esci</a>
+                        {% else %}
+                                <a class="nav-link" href="{{ path('app_login') }}">Accedi</a>
+                                <a class="btn btn-sm btn-light nav-register" href="{{ path('app_register') }}">Registrati</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <main class="container page-main">
+                {# 显示控制器通过 addFlash() 保存的一次性提示消息。 #}
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Chiudi"></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {# 每个具体页面的主要内容会插入到这里。 #}
+                {% block body %}
+                {% endblock %}
+            </main>
+            {# 全站共用页脚。 #}
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="footer-grid">
+                        <div class="footer-intro">
+                            <a class="footer-brand" href="{{ path('app_home') }}">
+                                <img class="brand-mark" src="{{ asset('images/buddybridge-mark.svg') }}" alt="">
+                                <span>BuddyBridge</span>
+                            </a>
+                            <p>Un luogo dove l’aiuto quotidiano diventa incontro interculturale.</p>
+                        </div>
+
+                        <div class="footer-links">
+                            <h3>Esplora</h3>
+                            <a href="{{ path('app_bridge_task_index') }}">Richieste</a>
+                            <a href="{{ path('app_home') }}#come-funziona">Come funziona</a>
+                        </div>
+
+                        <div class="footer-links">
+                            <h3>Partecipa</h3>
+                            {% if app.user %}
+                                <a href="{{ path('app_bridge_task_new') }}">Nuova richiesta</a>
+                                <a href="{{ path('app_penpal_index') }}">Amici di penna</a>
+                            {% else %}
+                                <a href="{{ path('app_register') }}">Registrati</a>
+                                <a href="{{ path('app_login') }}">Accedi</a>
+                            {% endif %}
+                            <a href="{{ path('app_terms') }}">Condizioni</a>
+                            <a href="{{ path('app_privacy') }}">Privacy</a>
+                        </div>
+                    </div>
+
+                    <div class="footer-bottom">
+                        <span>© {{ 'now'|date('Y') }} BuddyBridge</span>
+                        <span>Studenti cinesi e italiani, più vicini.</span>
+                    </div>
+                </div>
+            </footer>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+                </script>
+            </body>
+        </html>
