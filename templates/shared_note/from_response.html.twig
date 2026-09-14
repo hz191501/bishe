@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}Salva nel quaderno | BuddyBridge{% endblock %}
+{% block body %}
+<div class="shared-note-page">
+    <a class="note-back" href="{{ path('app_bridge_task_show', {id: source_response.task.id}) }}">← Torna alla richiesta</a>
+    <header class="note-page-heading"><span class="eyebrow">QUADERNO CONDIVISO</span><h1>Un consiglio da ricordare</h1><p>Scegli un amico e scrivi che cosa hai imparato da questa risposta.</p></header>
+    <div class="note-editor-layout">
+        <aside class="note-source-panel">
+            <span class="eyebrow">RISPOSTA DI {{ source_response.author.username }}</span>
+            <h2>{{ source_response.task.title }}</h2>
+            <blockquote>{{ source_response.content|nl2br }}</blockquote>
+            <p class="note-help">Conserveremo una copia di questa risposta, anche se il testo originale cambia.</p>
+        </aside>
+        <section class="note-editor-card" aria-label="Salva una nota">
+        {% if connections is empty %}
+            <h2>Serve un’amicizia attiva</h2><p>Il quaderno è privato e condiviso con un amico. Potrai salvare questa risposta dopo che una richiesta di amicizia sarà stata accettata.</p>
+            <a class="btn btn-primary" href="{{ path('app_penpal_index') }}">Vai agli amici di penna</a>
+        {% else %}
+            {% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
+            <form method="post" class="note-editor-form">
+                <input type="hidden" name="_token" value="{{ csrf_token('save_response_' ~ source_response.id) }}">
+                <label for="shared-connection">Con chi vuoi conservarla?</label>
+                <select id="shared-connection" name="connection_id" required aria-describedby="note-privacy">
+                    <option value="">Scegli un amico</option>
+                    {% for connection in connections %}
+                        {% set friend = connection.requester == app.user ? connection.receiver : connection.requester %}
+                        <option value="{{ connection.id }}" {{ values.connection_id == connection.id ? 'selected' : '' }}>{{ friend.username }}</option>
+                    {% endfor %}
+                </select>
+                <p id="note-privacy" class="note-help">La nota sarà visibile solo a voi due. La stessa risposta si salva una sola volta in ogni quaderno.</p>
+                {% include 'shared_note/_fields.html.twig' %}
+                <div class="note-form-actions"><a class="btn btn-outline-secondary" href="{{ path('app_bridge_task_show', {id: source_response.task.id}) }}">Annulla</a><button class="btn btn-primary" type="submit">Salva nel quaderno</button></div>
+            </form>
+        {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

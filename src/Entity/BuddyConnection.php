@@ -19,7 +19,7 @@ class BuddyConnection
     #[ORM\Column]
     private ?int $id = null;
 
-    // status 的常用值为 pending、accepted、rejected，表示申请处理阶段。
+    // status：pending 待处理、accepted 好友、rejected 已拒绝、removed 已解除。
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 

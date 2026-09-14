@@ -1,6 +1,6 @@
 
 
-{# 共享笔记区：好友双方可以新增笔记，作者或管理员可以删除。 #}
+{# 共享笔记区：双方可以新增及补充；作者可编辑正文，原有删除权限保持不变。 #}
 {% set note_type_labels = {
     word: 'Nuova parola',
     correction: 'Correzione linguistica',
@@ -14,7 +14,7 @@
         <div>
             <span class="eyebrow text-primary">MEMORIA CONDIVISA</span>
             <h2>Il quaderno del ponte</h2>
-            <p>Raccogliete parole, luoghi, abitudini e piccole scoperte nate dalle vostre lettere.</p>
+            <p>Conservate consigli dalle risposte e dalle lettere. Potete aggiungere esempi e precisazioni a ogni nota.</p>
         </div>
         <span class="notebook-count">
             {{ connection.sharedNotes|length }}
@@ -25,7 +25,7 @@
     <div class="notebook-layout">
         <form class="notebook-form-card" method="post" action="{{ path('app_shared_note_add', {id: connection.id}) }}">
             <input type="hidden" name="_token" value="{{ csrf_token('shared_note_' ~ connection.id) }}">
-            <span class="eyebrow">AGGIUNGI UN RICORDO</span>
+            <span class="eyebrow">NUOVA NOTA</span>
 
             <label for="note-type">Tipo di nota</label>
             <select id="note-type" name="type" required>
@@ -50,12 +50,17 @@
                         <span>{{ note_type_labels[note.type] ?? 'Nota culturale' }}</span>
                         <time datetime="{{ note.createdAt|date('c') }}">{{ note.createdAt|date('d/m/Y') }}</time>
                     </header>
-                    <h3>{{ note.title }}</h3>
+                    <h3><a href="{{ path('app_shared_note_show', {id: note.id}) }}">{{ note.title }}</a></h3>
+                    {% if note.sourceExcerpt is not null %}<span class="note-origin-label">Da una risposta della comunità</span>{% endif %}
                     <p>{{ note.content|nl2br }}</p>
+                    <div class="note-card-links">
+                        <a href="{{ path('app_shared_note_show', {id: note.id}) }}">Apri e aggiungi un dettaglio{% if note.comments|length %} ({{ note.comments|length }}){% endif %} →</a>
+                        {% if note.author == app.user %}<a href="{{ path('app_shared_note_edit', {id: note.id}) }}">Modifica</a>{% endif %}
+                    </div>
                     <footer>
                         <span>Aggiunta da <strong>{{ note.author.username }}</strong></span>
                         {% if note.author == app.user or is_granted('ROLE_ADMIN') %}
-                            <form method="post" action="{{ path('app_shared_note_delete', {id: note.id}) }}" onsubmit="return confirm('Eliminare questa nota?');">
+                            <form method="post" action="{{ path('app_shared_note_delete', {id: note.id}) }}" onsubmit="return confirm('Eliminare questa nota e tutte le sue aggiunte?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete_shared_note_' ~ note.id) }}">
                                 <button type="submit">Elimina</button>
                             </form>

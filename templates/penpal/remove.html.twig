@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Rimuovi amico | BuddyBridge{% endblock %}
+{% block body %}
+<section class="friend-removal" aria-labelledby="removal-title">
+    <a class="friend-removal-back" href="{{ path('app_penpal_index') }}">← Torna agli amici</a>
+    <div class="friend-removal-card">
+        <span class="eyebrow">GESTISCI LA TUA AMICIZIA</span>
+        <div class="friend-removal-person">
+            <span class="profile-avatar" aria-hidden="true">{{ friend.username|slice(0, 1)|upper }}</span>
+            <div><strong>{{ friend.username }}</strong><span>{{ friend.city ?: 'Amico di penna' }}</span></div>
+        </div>
+        <h1 id="removal-title">Vuoi rimuovere questo amico?</h1>
+        <p>Tu e <strong>{{ friend.username }}</strong> non comparirete più nelle rispettive liste di amici.</p>
+        <div class="friend-removal-info">
+            <h2>Cosa succede alle vostre lettere?</h2>
+            <p>Le lettere e le note condivise saranno conservate, ma nessuno di voi potrà leggerle o aggiungerne di nuove.</p>
+            <p>Per ritrovarvi, potrete inviare una nuova richiesta dal profilo. Solo dopo l’accettazione torneranno accessibili anche le lettere e le note precedenti. Il conteggio dei giorni insieme ripartirà da quel momento.</p>
+        </div>
+        <p class="friend-removal-hint">Rimuovere un amico non blocca il suo account o le sue interazioni pubbliche.</p>
+        <form method="post" class="friend-removal-actions">
+            <input type="hidden" name="_token" value="{{ csrf_token('penpal_remove_' ~ connection.id) }}">
+            <a class="btn btn-outline-secondary" href="{{ path('app_penpal_index') }}">Annulla</a>
+            <button class="btn friend-removal-confirm" type="submit">Conferma rimozione</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

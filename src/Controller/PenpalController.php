@@ -35,13 +35,17 @@ class PenpalController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
 
-        // 已经存在申请或好友关系的用户不再出现在推荐名单中。
+        // 排除待处理申请和已有好友；被拒绝的关系允许重新申请。
         $excludedUserIds = [];
         foreach ($user->getSentBuddyConnections() as $connection) {
-            $excludedUserIds[] = $connection->getReceiver()->getId();
+            if ($connection->getStatus() !== 'rejected') {
+                $excludedUserIds[] = $connection->getReceiver()->getId();
+            }
         }
         foreach ($user->getReceivedBuddyConnections() as $connection) {
-            $excludedUserIds[] = $connection->getRequester()->getId();
+            if ($connection->getStatus() !== 'rejected') {
+                $excludedUserIds[] = $connection->getRequester()->getId();
+            }
         }
 
         $friendQuery = trim($request->query->getString('friend_q'));
@@ -189,17 +193,20 @@ class PenpalController extends AbstractController
         if (!$this->isCsrfTokenValid('penpal_request_'.$receiver->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
+        $existingConnection = $connections->findBetween($requester, $receiver);
         if ($requester === $receiver) {
             $this->addFlash('warning', 'Non puoi inviare una richiesta a te stesso.');
-        } elseif ($connections->findBetween($requester, $receiver)) {
+        } elseif ($existingConnection && !in_array($existingConnection->getStatus(), ['rejected', 'removed'], true)) {
             $this->addFlash('info', 'Esiste già un collegamento o una richiesta tra voi.');
         } else {
-            $connection = (new BuddyConnection())
+            // 重新申请复用原记录，仍需对方接受。
+            $connection = ($existingConnection ?? new BuddyConnection())
                 ->setRequester($requester)
                 ->setReceiver($receiver)
                 ->setStatus('pending')
+                ->setAcceptedAt(null)
                 ->setCreatedAt(new \DateTimeImmutable())
-                ->setSourceTask($sourceTask);
+                ->setSourceTask($existingConnection?->getSourceTask() ?? $sourceTask);
             $entityManager->persist($connection);
             $entityManager->flush();
             $this->addFlash('success', 'Richiesta di amicizia inviata.');
@@ -238,6 +245,34 @@ class PenpalController extends AbstractController
         $this->addFlash('info', 'Richiesta rifiutata.');
 
         return $this->redirectToRoute('app_penpal_index');
+    }
+
+    #[Route('/{id}/rimuovi', name: 'app_penpal_remove', methods: ['GET', 'POST'])]
+    public function removeFriend(BuddyConnection $connection, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $user = $this->getUser();
+        if ($connection->getRequester() !== $user && $connection->getReceiver() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('penpal_remove_'.$connection->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+        if ($connection->getStatus() !== 'accepted') {
+            $this->addFlash('info', 'Questa amicizia non è attiva.');
+            return $this->redirectToRoute('app_penpal_index');
+        }
+        if ($request->isMethod('POST')) {
+            // 只解除关系，保留信件和笔记；所有私密入口仍要求 accepted。
+            $connection->setStatus('removed')->setAcceptedAt(null);
+            $entityManager->flush();
+            $this->addFlash('success', 'Amicizia rimossa. Le lettere e il quaderno sono conservati, ma non più accessibili.');
+            return $this->redirectToRoute('app_penpal_index');
+        }
+        return $this->render('penpal/remove.html.twig', [
+            'connection' => $connection,
+            'friend' => $connection->getRequester() === $user ? $connection->getReceiver() : $connection->getRequester(),
+        ]);
     }
 
     #[Route('/{id}/messaggi', name: 'app_penpal_chat', methods: ['GET', 'POST'])]

@@ -3,9 +3,9 @@
 {# 首页顶部横幅：介绍网站，并根据登录状态显示不同按钮。 #}
 <section class="hero-shell mb-5">
     <div class="hero-copy">
-        <span class="eyebrow">COMUNITÀ STUDENTESCA INTERCULTURALE</span>
+        <span class="eyebrow">COMUNITÀ INTERCULTURALE</span>
         <h1>Piccoli aiuti.<br>Legami che restano.</h1>
-        <p>Uno spazio dedicato agli studenti cinesi e italiani per risolvere dubbi concreti, condividere esperienze e conoscersi davvero.</p>
+        <p>Uno spazio per chi vive, studia o lavora tra Italia e Cina: risolvere dubbi concreti, condividere esperienze e conoscersi.</p>
         <div class="d-flex flex-wrap gap-3 mt-4">
             {% if app.user %}
                 <a class="btn btn-light btn-lg px-4" href="{{ path('app_bridge_task_new') }}">Pubblica una richiesta</a>

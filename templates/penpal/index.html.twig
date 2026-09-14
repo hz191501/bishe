@@ -1,4 +1,4 @@
-﻿
+
 
 {# 好友首页：显示好友搜索与分页、申请列表以及推荐用户。 #}
 {% extends 'base.html.twig' %}
@@ -37,6 +37,9 @@
                                     </small>
                                 </span>
                             </a>
+                            {% if connection.messages|length > 0 or connection.sharedNotes|length > 0 %}
+                                <p class="small text-muted">Accettando, le lettere e le note precedenti saranno di nuovo accessibili a entrambi.</p>
+                            {% endif %}
                             <div class="connection-actions">
                                 <form method="post" action="{{ path('app_penpal_accept', {id: connection.id}) }}">
                                     <input type="hidden" name="_token" value="{{ csrf_token('penpal_accept_' ~ connection.id) }}">
@@ -138,6 +141,7 @@
                         >
                             {{ unread_count > 0 ? 'Leggi ' ~ unread_count ~ (unread_count == 1 ? ' nuova lettera' : ' nuove lettere') : 'Apri le lettere' }}
                         </a>
+                        <a class="friend-remove-link" href="{{ path('app_penpal_remove', {id: connection.id}) }}">Rimuovi amico</a>
                     </article>
                 {% else %}
                         <div class="empty-state">

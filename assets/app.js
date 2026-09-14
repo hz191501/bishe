@@ -25,6 +25,8 @@ import './styles/pages/admin.css';
 import './styles/pages/banners.css';
 
 import './styles/pages/polish.css';
+// 共享笔记的新页面独立维护，避免影响既有聊天和帖子布局。
+import './styles/pages/notes.css';
 
 
 

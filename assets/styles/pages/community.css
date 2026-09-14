@@ -1,4 +1,4 @@
-﻿
+
 /* 社区页面样式：帖子详情、回答、评论、好友列表和信件界面。 */
 
 .page-heading {
@@ -3545,3 +3545,26 @@ width:100%}
 
 
 
+
+/* 好友管理：次要入口与独立确认页，避免误操作。 */
+.friend-remove-link { color: #87534b; font-size: .85rem; text-underline-offset: .2em; padding: .5rem 0; display: inline-block; }
+.friend-remove-link:hover { color: #713d35; }
+.relationship-manage { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.friend-removal { max-width: 680px; margin: 1rem auto 3rem; }
+.friend-removal-back { display: inline-block; margin-bottom: 1.25rem; color: var(--navy); text-underline-offset: .2em; }
+.friend-removal-card { padding: clamp(1.4rem, 4vw, 2.75rem); border: 1px solid var(--border); border-radius: 24px; background: #fffdf9; box-shadow: 0 14px 40px rgba(16,47,79,.07); }
+.friend-removal-card > .eyebrow { color: var(--muted); }
+.friend-removal-person { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; }
+.friend-removal-person .profile-avatar { flex-shrink: 0; }
+.friend-removal-person strong, .friend-removal-person div > span { display: block; overflow-wrap: anywhere; }
+.friend-removal-person div > span { color: var(--muted); font-size: .9rem; }
+.friend-removal-card h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); color: var(--navy); margin-bottom: 1rem; }
+.friend-removal-info { background: var(--surface-blue); padding: 1.25rem; border-radius: 16px; margin: 1.5rem 0; }
+.friend-removal-info h2 { font-size: 1rem; color: var(--navy); margin-bottom: .75rem; }
+.friend-removal-info p { font-size: .95rem; }
+.friend-removal-info p:last-child { margin-bottom: 0; }
+.friend-removal-hint { font-size: .88rem; color: var(--muted); }
+.friend-removal-actions { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1.75rem; flex-wrap: wrap; }
+.friend-removal-confirm { background: #a34838; border-color: #a34838; color: #fff; }
+.friend-removal-confirm:hover, .friend-removal-confirm:focus-visible { background: #81392d; border-color: #81392d; color: #fff; }
+@media (max-width: 480px) { .friend-removal-actions .btn { width: 100%; } }

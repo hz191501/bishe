@@ -120,7 +120,7 @@
 <div>
 <span class="eyebrow text-primary">CONTRIBUTI DELLA COMUNITÀ</span>
 <h2>Risposte</h2>
-<p>Esperienze, indicazioni e chiarimenti condivisi dagli altri studenti.</p>
+<p>Esperienze, indicazioni e chiarimenti condivisi dagli altri membri della comunità.</p>
 </div>
 <span class="answer-count">{{ response_pagination.totalItems }}</span>
 </div>
@@ -151,6 +151,10 @@
 <div class="answer-content">{{ response.content|nl2br }}</div>
 <div class="answer-toolbar">
 <div class="answer-public-actions">
+{# 保存的是公开回答；具体共同笔记在下一页选择并再次检查好友权限。 #}
+{% if app.user %}
+<a class="btn btn-sm btn-outline-primary" href="{{ path('app_shared_note_from_response', {id: response.id}) }}">Salva nel quaderno</a>
+{% endif %}
 {% if app.user and response.author != app.user %}
 <form method="post" action="{{ path('app_task_response_like', {id:response.id}) }}">
 <input type="hidden" name="_token" value="{{ csrf_token('like_response' ~ response.id) }}">

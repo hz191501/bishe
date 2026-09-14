@@ -35,11 +35,54 @@ class BridgeJourneyService
 
         $messages = [];
         $notes = [];
+        $mutualNoteDates = [];
         foreach ($connections as $connection) {
-            // ... 展开集合内容，再用 array_push 汇总所有好友关系中的信件和笔记。
-            array_push($messages, ...$connection->getMessages()->toArray());
-            array_push($notes, ...$connection->getSharedNotes()->toArray());
+            // 个人徽章只统计本人发送的信件和本人记录的笔记。
+            foreach ($connection->getMessages() as $message) {
+                if ($message->getAuthor() === $user) {
+                    $messages[] = $message;
+                }
+            }
+
+            $friend = $connection->getRequester() === $user
+                ? $connection->getReceiver()
+                : $connection->getRequester();
+            $ownNotes = [];
+            $friendNotes = [];
+            foreach ($connection->getSharedNotes() as $note) {
+                if ($note->getAuthor() === $user) {
+                    $notes[] = $note;
+                    $ownNotes[] = $note;
+                } elseif ($friend !== null && $note->getAuthor() === $friend) {
+                    $friendNotes[] = $note;
+                }
+                // 补充留言也属于共同贡献，但不增加个人笔记数量或笔记类型徽章。
+                foreach ($note->getComments() as $comment) {
+                    if ($comment->getAuthor() === $user) {
+                        $ownNotes[] = $comment;
+                    } elseif ($friend !== null && $comment->getAuthor() === $friend) {
+                        $friendNotes[] = $comment;
+                    }
+                }
+            }
+            // 同一本笔记里双方都参与后解锁，日期取较晚一方的首次贡献。
+            if ($ownNotes !== [] && $friendNotes !== []) {
+                $mutualNoteDates[] = max($this->firstDate($ownNotes), $this->firstDate($friendNotes));
+            }
         }
+
+        // 按时间累计不同类型，第三种类型首次出现时才解锁。
+        usort($notes, static fn ($a, $b): int => $a->getCreatedAt() <=> $b->getCreatedAt());
+        $noteTypes = [];
+        $thirdTypeDate = null;
+        foreach ($notes as $note) {
+            $noteTypes[$note->getType()] = true;
+            if (count($noteTypes) >= 3) {
+                $thirdTypeDate = $note->getCreatedAt();
+                break;
+            }
+        }
+        $mutualNoteDate = $mutualNoteDates !== [] ? min($mutualNoteDates) : null;
 
         $bestResponses = array_values(array_filter(
             $responses,
@@ -57,15 +100,6 @@ class BridgeJourneyService
                 && $connection->getAcceptedAt()->diff(new \DateTimeImmutable())->days >= 30,
         ));
 
-        $noteAuthors = [];
-        foreach ($notes as $note) {
-            $author = $note->getAuthor();
-            if ($author !== null) {
-                // 以用户ID作为数组键自动去重，用于判断是否有至少两位不同作者。
-                $noteAuthors[$author->getId()] = true;
-            }
-        }
-
         $badges = [
             // 每条规则调用 badge() 生成相同结构，Twig 可以用同一个循环统一显示。
             $this->badge('first_task', 'Primo passo', 'Aiuto', 'Hai pubblicato la prima richiesta.', '01', count($tasks) >= 1, $this->firstDate($tasks)),
@@ -78,8 +112,8 @@ class BridgeJourneyService
             $this->badge('five_letters', 'Dialogo continuo', 'Lettere', 'Hai scritto almeno 5 lettere.', '08', count($messages) >= 5, $this->dateAtPosition($messages, 5)),
             $this->badge('ten_letters', 'Corrispondenza viva', 'Lettere', 'Hai scritto almeno 10 lettere.', '09', count($messages) >= 10, $this->dateAtPosition($messages, 10)),
             $this->badge('first_note', 'Prima scoperta', 'Cultura', 'Hai salvato la prima nota culturale.', '10', count($notes) >= 1, $this->firstDate($notes)),
-            $this->badge('three_cultures', 'Esploratore culturale', 'Cultura', 'Hai raccolto note di almeno 3 tipi.', '11', count($notes) >= 3, $this->dateAtPosition($notes, 3)),
-            $this->badge('mutual_notes', 'Due voci, due culture', 'Cultura', 'Tu e un amico avete contribuito allo stesso quaderno.', '12', count($noteAuthors) >= 2, count($noteAuthors) >= 2 ? $this->firstDate($notes) : null),
+            $this->badge('three_cultures', 'Esploratore culturale', 'Cultura', 'Hai raccolto note di almeno 3 tipi.', '11', $thirdTypeDate !== null, $thirdTypeDate),
+            $this->badge('mutual_notes', 'Due voci, due culture', 'Cultura', 'Tu e un amico avete contribuito allo stesso quaderno.', '12', $mutualNoteDate !== null, $mutualNoteDate),
         ];
 
         $unlocked = count(array_filter($badges, static fn (array $badge): bool => $badge['unlocked']));

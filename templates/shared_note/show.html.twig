@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ note.title }} | BuddyBridge{% endblock %}
+{% block body %}
+{% set friend = note.connection.requester == app.user ? note.connection.receiver : note.connection.requester %}
+<div class="shared-note-page shared-note-page--narrow">
+    <a class="note-back" href="{{ path('app_penpal_chat', {id: note.connection.id, _fragment: 'quaderno-del-ponte'}) }}">← Il quaderno con {{ friend.username }}</a>
+    <article class="note-editor-card note-detail">
+        <span class="eyebrow">IL VOSTRO QUADERNO</span><h1>{{ note.title }}</h1>
+        <p class="note-help">Nota di {{ note.author.username }} · {{ note.createdAt|date('d/m/Y H:i') }}{% if note.updatedAt %} · Modificata il {{ note.updatedAt|date('d/m/Y H:i') }}{% endif %}</p>
+        {# 自动转义后再换行，用户文字不能作为 HTML 或脚本执行。 #}
+        <div class="note-personal-content">{{ note.content|nl2br }}</div>
+        {% if note.sourceExcerpt is not null %}
+            <details class="note-saved-source">
+                <summary>La risposta da cui è nata questa nota</summary>
+                <h2>{{ note.sourceTitle }}</h2><blockquote>{{ note.sourceExcerpt|nl2br }}</blockquote>
+                {% if note.sourceResponse %}<a href="{{ path('app_bridge_task_show', {id: note.sourceResponse.task.id}) }}">Apri la richiesta originale →</a>
+                {% else %}<p class="note-help">La risposta originale non è più disponibile. Questa è la copia salvata nel quaderno.</p>{% endif %}
+            </details>
+        {% endif %}
+        {% if note.author == app.user %}<a class="btn btn-outline-primary btn-sm" href="{{ path('app_shared_note_edit', {id: note.id}) }}">Modifica la mia nota</a>{% endif %}
+    </article>
+    <section class="note-additions" id="aggiunte" aria-labelledby="additions-title">
+        <h2 id="additions-title">Le vostre aggiunte</h2><p>Un esempio, un uso diverso o una precisazione da condividere.</p>
+        {% for comment in note.comments %}
+            <article class="note-addition">
+                <header><strong>{{ comment.author.username }}</strong><time datetime="{{ comment.createdAt|date('c') }}">{{ comment.createdAt|date('d/m/Y H:i') }}</time></header>
+                <p>{{ comment.content|nl2br }}</p>
+                {% if comment.author == app.user %}
+                    <form method="post" action="{{ path('app_shared_note_comment_delete', {id: comment.id}) }}" onsubmit="return confirm('Eliminare questa aggiunta?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_note_comment_' ~ comment.id) }}"><button class="note-delete-addition" type="submit">Elimina la mia aggiunta</button>
+                    </form>
+                {% endif %}
+            </article>
+        {% else %}<p class="note-empty-additions">Non ci sono ancora aggiunte.</p>{% endfor %}
+        {% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
+        <form class="note-editor-card note-editor-form" method="post" action="{{ path('app_shared_note_comment', {id: note.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('note_comment_' ~ note.id) }}">
+            <label for="note-addition-content">Aggiungi un dettaglio</label><textarea id="note-addition-content" name="content" rows="4" maxlength="1000" required aria-describedby="addition-help">{{ comment_content }}</textarea>
+            <p id="addition-help" class="note-help">Visibile solo a te e {{ friend.username }}. Massimo 1000 caratteri.</p>
+            <button class="btn btn-primary" type="submit">Aggiungi al quaderno</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

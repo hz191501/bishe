@@ -1,0 +1,11 @@
+{# 保存与编辑共用字段；错误时 values 保留输入，来源摘录不在可编辑字段中。 #}
+{% set labels = {word: 'Nuova parola', correction: 'Correzione linguistica', culture: 'Scoperta culturale', place: 'Luogo da visitare', food: 'Cibo e tradizioni', advice: 'Consiglio pratico'} %}
+<label for="shared-type">Tipo di nota</label>
+<select id="shared-type" name="type" required>
+    {% for value, label in labels %}<option value="{{ value }}" {{ values.type == value ? 'selected' : '' }}>{{ label }}</option>{% endfor %}
+</select>
+<label for="shared-title">Titolo</label>
+<input id="shared-title" name="title" value="{{ values.title }}" maxlength="120" required>
+<label for="shared-content">Che cosa hai imparato?</label>
+<textarea id="shared-content" name="content" rows="6" maxlength="2000" required aria-describedby="shared-content-help">{{ values.content }}</textarea>
+<p id="shared-content-help" class="note-help">Scrivi ciò che vuoi ricordare o come useresti questo consiglio. Massimo 2000 caratteri.</p>
