@@ -43,3 +43,7 @@ PHP 8.2、Symfony 6.4、Doctrine ORM / Migrations、Twig、Bootstrap、自定义
 `php vendor/bin/phpunit`：当前 29 项测试、150 条断言通过。共享笔记 HTTP 流程使用独立 SQLite 内存数据库。Twig 及 YAML 语法检查通过。这些检查不等于真实用户研究或全站人工验收。
 
 修改时优先查看相关控制器、实体、模板和样式，跳过 `vendor/`、`var/`、`.phpunit.cache/`、`public/assets/` 和 `assets/vendor/`。不要公开 `.env`、`.env.local`、密码或私人数据。
+
+## 演示数据
+
+演示副本位于 demo/demo.sql，只向执行过迁移的空 MariaDB 数据库导入。推荐运行 php bin/import-demo.php，它会拒绝向已有数据的数据库导入。演示账号和试用流程见 demo/README.md。公开问题、回答、分类和关系保留；邮箱及密码已替换，出生日期和性别清空，私人信件及笔记改为示例，原通知不导出。本机原数据库不受影响。

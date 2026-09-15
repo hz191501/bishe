@@ -4,6 +4,12 @@ Progetto di tesi di Hong Zhao. BuddyBridge collega l'aiuto pubblico, le relazion
 
 Il progetto è sviluppato con Symfony 6.4, Doctrine, Twig e Bootstrap. Per provarlo occorre avviarlo in locale seguendo i passaggi qui sotto.
 
+## Cosa si vede subito
+
+Dopo l'avvio, anche senza effettuare il login, si possono vedere la home, le categorie, le domande pubbliche e le risposte già pubblicate. Per provare gli amici di penna, le lettere, gli appunti condivisi e il passaporto culturale bisogna entrare con un account.
+
+I dati e gli account per la prova si importano seguendo [demo/README.md](demo/README.md). In questo modo la prima pagina mostra già alcuni esempi e non è necessario creare tutto da zero.
+
 ## Requisiti
 
 - PHP 8.2 o successivo compatibile con `composer.lock`; estensioni PDO MySQL, mbstring, intl e quelle richieste da Composer. Per i test serve anche PDO SQLite.
@@ -22,7 +28,7 @@ Non serve installare Node.js.
    cd bishe
    ```
 
-   Per un repository privato è necessario un account autorizzato. In alternativa, scaricare lo ZIP da GitHub ed estrarlo.
+   In alternativa, scaricare lo ZIP da GitHub ed estrarlo.
 
 2. Copiare `.env.example` in `.env` (in PowerShell: `Copy-Item .env.example .env`). Impostare utente e password del proprio database in `DATABASE_URL`, usando un database nuovo dedicato al progetto. Codificare gli eventuali caratteri speciali della password per l'uso in un URL. Generare un segreto locale con il comando seguente e copiarne il risultato in `APP_SECRET`:
 
@@ -42,24 +48,21 @@ Non serve installare Node.js.
    symfony server:start --no-tls --port=8000
    ```
 
-4. Aprire `http://127.0.0.1:8000/`. Con Symfony CLI non serve avviare Apache. I comandi di migrazione creano la struttura; il repository non contiene gli account, le lettere o il database personale dell'autore.
+4. Aprire `http://127.0.0.1:8000/`. Con Symfony CLI non serve avviare Apache. Le migrazioni creano le tabelle. Per vedere anche le domande e gli account di esempio, importare i dati descritti qui sotto.
 
-## Preparare una prova con due account
+## Provare il sito con i dati già pronti
 
-1. Registrare due account da `/register`, scegliendo email e password locali. Usare due browser o una finestra privata per tenerli aperti contemporaneamente.
-2. Il database nuovo non contiene categorie. Per preparare l'ambiente locale, in phpMyAdmin selezionare **solo il nuovo database BuddyBridge** ed eseguire la seguente istruzione, sostituendo l'email con quella del primo account appena registrato:
+Dopo le migrazioni, sul database ancora vuoto, eseguire:
 
-   ```sql
-   UPDATE user SET roles = '["ROLE_ADMIN"]' WHERE email = 'indirizzo-del-primo-account@example.test';
-   ```
+```text
+php bin/import-demo.php
+```
 
-3. Uscire e rientrare con il primo account. Aprire `/category/new` e creare una categoria, per esempio `Lingua`.
-4. Pubblicare una domanda da `/bridge/task/new`. Con il secondo account, rispondere alla domanda. Il suo autore può scegliere la risposta migliore.
-5. Inviare una richiesta di amicizia di penna e accettarla con l'altro account. Aprire la relazione da `/amici-di-penna` per scambiare lettere.
-6. Su una risposta pubblica scegliere **Salva nel quaderno** e selezionare la relazione accettata. L'autore può modificare la propria nota; entrambi possono aggiungere contributi.
-7. Aprire `/passaporto-culturale` per vedere le attività registrate.
+La home mostrerà le domande e le risposte preparate per la presentazione. Per entrare usare `liwei@example.test` e la password `BuddyBridgeDemo2026!`.
 
-La rimozione di una relazione interrompe l'accesso alle lettere e agli appunti senza cancellarne la cronologia; una nuova richiesta accettata ripristina l'accesso.
+Gli altri account, il percorso di prova e l'alternativa con phpMyAdmin sono in [demo/README.md](demo/README.md). Le credenziali sono pubbliche e destinate solo alla prova locale. Il comando rifiuta l'importazione se il database contiene già dati.
+
+È anche possibile partire senza dati di esempio e registrare nuovi account. Le categorie richiedono un account amministratore.
 
 ## Orientarsi nel codice
 
