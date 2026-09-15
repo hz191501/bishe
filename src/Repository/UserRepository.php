@@ -63,7 +63,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * 比较当前用户和一个候选用户，返回匹配分数与可读原因。
-     * 这是简单、可解释的规则计算，不是人工智能推荐。
+     * 这是简单、可解释的规则计算，分值来自明确条件。
      */
     private function buildMatch(User $current, User $candidate): array
     {
