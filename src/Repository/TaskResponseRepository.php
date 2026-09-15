@@ -30,14 +30,10 @@ class TaskResponseRepository extends ServiceEntityRepository
     ): array
     {
         return $this->createQueryBuilder('response')
-            // 统计每条回答的点赞人数；HIDDEN 让统计值只参与排序而不改变返回结构。
-            ->addSelect('COUNT(likedBy.id) AS HIDDEN likeCount')
-            // leftJoin 保证零点赞的回答也会出现在结果中。
-            ->leftJoin('response.likedBy', 'likedBy')
+            // SIZE 读取关联集合的数量，不需要 GROUP BY，也兼容 MySQL 的严格模式。
+            ->addSelect('SIZE(response.likedBy) AS HIDDEN likeCount')
             ->andWhere('response.task = :task')
             ->setParameter('task', $task)
-            // 使用 COUNT 聚合后必须按回答分组，才能得到每条回答各自的点赞数。
-            ->groupBy('response.id')
             ->orderBy('response.isBestAnswer', 'DESC')
             ->addOrderBy('likeCount', 'DESC')
             ->addOrderBy('response.createdAt', 'DESC')

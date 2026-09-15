@@ -5,6 +5,7 @@
 namespace App\Repository;
 
 use App\Entity\BridgeTask;
+use App\Entity\TaskResponse;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -91,20 +92,30 @@ class BridgeTaskRepository extends ServiceEntityRepository
     public function findParticipatedByUserPaginated(User $user, int $page, int $perPage = 6): Paginator
     {
         /*
-         * 从回答反向找到用户参与过的帖子。
-         * MAX(responses.createdAt) 计算该用户在每个讨论中的最近参与时间；
-         * HIDDEN 表示该计算值只用于排序，不出现在最终实体结果中。
+         * 用相关子查询取得用户在每个讨论中的最后回答时间。
+         * 这样每个帖子天然只返回一次，也能兼容启用 ONLY_FULL_GROUP_BY 的 MySQL。
          */
-        $query = $this->createQueryBuilder('task')
+        $lastParticipation = $this->getEntityManager()->createQueryBuilder()
+            ->select('MAX(participation.createdAt)')
+            ->from(TaskResponse::class, 'participation')
+            ->andWhere('participation.task = task')
+            ->andWhere('participation.author = :user');
+
+        $participationExists = $this->getEntityManager()->createQueryBuilder()
+            ->select('1')
+            ->from(TaskResponse::class, 'participation_check')
+            ->andWhere('participation_check.task = task')
+            ->andWhere('participation_check.author = :user');
+
+        $builder = $this->createQueryBuilder('task');
+        $query = $builder
             ->addSelect('category')
-            ->addSelect('MAX(responses.createdAt) AS HIDDEN lastParticipation')
+            ->addSelect(sprintf('(%s) AS HIDDEN lastParticipation', $lastParticipation->getDQL()))
             ->join('task.category', 'category')
-            ->join('task.responses', 'responses')
             // 排除用户自己发布的帖子，避免与“发布的帖子”区域重复。
-            ->andWhere('responses.author = :user')
             ->andWhere('task.author != :user')
+            ->andWhere($builder->expr()->exists($participationExists->getDQL()))
             ->setParameter('user', $user)
-            ->groupBy('task.id', 'category.id')
             ->orderBy('lastParticipation', 'DESC')
             ->setFirstResult(($page - 1) * $perPage)
             ->setMaxResults($perPage)
